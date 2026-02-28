@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>夜桜 Yozakura</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <!-- ── Header ─────────────────────────────────────────────── -->
+  <header class="header">
+    <h1 class="header__title" id="popup-title">夜桜</h1>
+    <button class="header__lang-btn" id="lang-toggle" title="Switch language">DE</button>
+  </header>
+
+  <!-- ── Session / mode badge ───────────────────────────────── -->
+  <div class="mode-badge" id="mode-badge">
+    <span class="mode-badge__label" id="mode-label">OFF</span>
+    <span class="mode-badge__timer" id="mode-timer" hidden></span>
+  </div>
+
+  <!-- ── Add site form ──────────────────────────────────────── -->
+  <section class="add-site">
+    <input
+      class="add-site__input"
+      id="add-input"
+      type="text"
+      placeholder="Add domain (e.g. reddit.com)"
+      autocomplete="off"
+      spellcheck="false"
+    />
+    <button class="add-site__btn btn btn--accent" id="add-btn">Block</button>
+  </section>
+
+  <!-- ── Blocked sites list ─────────────────────────────────── -->
+  <section class="sites-section">
+    <h2 class="sites-section__heading" id="sites-heading">Blocked Sites</h2>
+    <ul class="sites-list" id="sites-list">
+      <!-- Populated by popup.js -->
+    </ul>
+    <p class="sites-empty" id="sites-empty">No sites blocked yet.</p>
+  </section>
+
+  <!-- ── Manual toggle ─────────────────────────────────────── -->
+  <section class="toggle-section">
+    <label class="toggle-label" id="toggle-label" for="manual-toggle">Block now</label>
+    <label class="toggle-switch">
+      <input type="checkbox" id="manual-toggle" />
+      <span class="toggle-switch__track"></span>
+    </label>
+  </section>
+
+  <!-- ── Pomodoro controls ──────────────────────────────────── -->
+  <section class="pomodoro-section" id="pomodoro-section">
+    <button class="btn btn--pink" id="pomodoro-start-btn">Start Pomodoro</button>
+    <button class="btn btn--outline" id="pomodoro-stop-btn" hidden>Stop Pomodoro</button>
+  </section>
+
+  <!-- ── Duration controls ──────────────────────────────────── -->
+  <section class="duration-section" id="duration-section" hidden>
+    <label class="duration-label" id="duration-label" for="duration-input">
+      Block for (minutes):
+    </label>
+    <div class="duration-row">
+      <input class="duration-input" id="duration-input" type="number" min="1" max="480" value="25" />
+      <button class="btn btn--accent" id="duration-start-btn">Start Timer</button>
+    </div>
+  </section>
+
+  <!-- ── Footer ─────────────────────────────────────────────── -->
+  <footer class="footer">
+    <a class="footer__settings-link" id="settings-link" href="#">Settings</a>
+  </footer>
+
+  <!-- ── PIN modal ──────────────────────────────────────────── -->
+  <div class="pin-overlay" id="pin-overlay" hidden>
+    <div class="pin-modal">
+      <h3 class="pin-modal__title" id="pin-modal-title">Enter PIN</h3>
+      <p class="pin-modal__desc" id="pin-modal-desc">4-digit PIN required to remove site.</p>
+      <input
+        class="pin-modal__input"
+        id="pin-input"
+        type="password"
+        maxlength="4"
+        inputmode="numeric"
+        pattern="[0-9]{4}"
+        placeholder="••••"
+        autocomplete="off"
+      />
+      <p class="pin-modal__error" id="pin-error" hidden>Incorrect PIN.</p>
+      <div class="pin-modal__buttons">
+        <button class="btn btn--accent" id="pin-submit">Unlock</button>
+        <button class="btn btn--outline" id="pin-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js" type="module"></script>
+</body>
+</html>
