@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yozakura — Settings</title>
+  <link rel="stylesheet" href="settings.css" />
+</head>
+<body>
+  <div class="page">
+
+    <header class="page-header">
+      <span class="page-header__kanji">夜桜</span>
+      <h1 class="page-header__title" id="settings-title">Yozakura Settings</h1>
+    </header>
+
+    <!-- ── 1. Security ─────────────────────────────────────────────── -->
+    <section class="section" id="section-security">
+      <h2 class="section__heading" id="heading-security">Security</h2>
+
+      <div class="field">
+        <label class="field__label" id="label-pin-current" for="pin-current">Current PIN</label>
+        <input class="field__input" id="pin-current" type="password"
+               maxlength="4" inputmode="numeric" pattern="[0-9]{4}"
+               placeholder="••••" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label class="field__label" id="label-pin-new" for="pin-new">New 4-digit PIN</label>
+        <input class="field__input" id="pin-new" type="password"
+               maxlength="4" inputmode="numeric" pattern="[0-9]{4}"
+               placeholder="••••" autocomplete="new-password" />
+      </div>
+      <div class="field">
+        <label class="field__label" id="label-pin-confirm" for="pin-confirm">Confirm PIN</label>
+        <input class="field__input" id="pin-confirm" type="password"
+               maxlength="4" inputmode="numeric" pattern="[0-9]{4}"
+               placeholder="••••" autocomplete="new-password" />
+      </div>
+      <p class="field-msg field-msg--error" id="pin-msg" hidden></p>
+      <div class="btn-row">
+        <button class="btn btn--accent" id="pin-set-btn">Set PIN</button>
+        <button class="btn btn--outline btn--danger" id="pin-remove-btn">Remove PIN</button>
+      </div>
+    </section>
+
+    <!-- ── 2. Language ─────────────────────────────────────────────── -->
+    <section class="section" id="section-language">
+      <h2 class="section__heading" id="heading-language">Language</h2>
+      <div class="radio-group">
+        <label class="radio-label">
+          <input class="radio-input" type="radio" name="lang" value="en" id="lang-en" />
+          <span id="label-lang-en">English</span>
+        </label>
+        <label class="radio-label">
+          <input class="radio-input" type="radio" name="lang" value="de" id="lang-de" />
+          <span id="label-lang-de">Deutsch</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- ── 3. AI Quotes ────────────────────────────────────────────── -->
+    <section class="section" id="section-ai">
+      <h2 class="section__heading" id="heading-ai">AI Quotes</h2>
+
+      <div class="field">
+        <label class="field__label" id="label-ai-provider" for="ai-provider">Provider</label>
+        <select class="field__select" id="ai-provider">
+          <option value="none" id="opt-none">None (use fallback quotes)</option>
+          <option value="openai" id="opt-openai">OpenAI (gpt-4o)</option>
+          <option value="anthropic" id="opt-anthropic">Anthropic (claude-3-5-haiku)</option>
+          <option value="gemini" id="opt-gemini">Google Gemini (gemini-1.5-flash)</option>
+        </select>
+      </div>
+
+      <div class="field" id="ai-key-field">
+        <label class="field__label" id="label-ai-key" for="ai-key">API Key</label>
+        <div class="field__input-row">
+          <input class="field__input" id="ai-key" type="password"
+                 placeholder="sk-..." autocomplete="off" />
+          <button class="btn btn--outline btn--icon" id="ai-key-toggle"
+                  title="Show/hide API key">Show</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field__label" id="label-ai-character" for="ai-character">
+          Anime character &amp; show (optional)
+        </label>
+        <input class="field__input" id="ai-character" type="text"
+               placeholder="e.g. Rock Lee from Naruto" />
+      </div>
+
+      <div class="field">
+        <label class="field__label" id="label-ai-tone" for="ai-tone">Quote tone</label>
+        <select class="field__select" id="ai-tone">
+          <option value="motivational" id="opt-tone-motivational">Motivational</option>
+          <option value="philosophical" id="opt-tone-philosophical">Philosophical</option>
+          <option value="stern" id="opt-tone-stern">Stern</option>
+          <option value="funny" id="opt-tone-funny">Funny</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- ── 4. Schedule ─────────────────────────────────────────────── -->
+    <section class="section" id="section-schedule">
+      <h2 class="section__heading" id="heading-schedule">Schedule</h2>
+
+      <div class="field field--inline">
+        <input type="checkbox" class="checkbox-input" id="schedule-enable" />
+        <label class="field__label" id="label-schedule-enable" for="schedule-enable">
+          Enable schedule blocking
+        </label>
+      </div>
+
+      <div class="field field--row" id="schedule-time-row">
+        <div class="field__sub">
+          <label class="field__label" id="label-schedule-from" for="schedule-from">
+            Block from
+          </label>
+          <input class="field__input field__input--time" id="schedule-from"
+                 type="time" value="09:00" />
+        </div>
+        <div class="field__sub">
+          <label class="field__label" id="label-schedule-to" for="schedule-to">until</label>
+          <input class="field__input field__input--time" id="schedule-to"
+                 type="time" value="17:00" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 5. Pomodoro ─────────────────────────────────────────────── -->
+    <section class="section" id="section-pomodoro">
+      <h2 class="section__heading" id="heading-pomodoro">Pomodoro</h2>
+
+      <div class="field field--row">
+        <div class="field__sub">
+          <label class="field__label" id="label-pom-work" for="pom-work">
+            Work session (minutes)
+          </label>
+          <input class="field__input field__input--number" id="pom-work"
+                 type="number" min="1" max="120" value="50" />
+        </div>
+        <div class="field__sub">
+          <label class="field__label" id="label-pom-break" for="pom-break">
+            Break (minutes)
+          </label>
+          <input class="field__input field__input--number" id="pom-break"
+                 type="number" min="1" max="60" value="10" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 6. Task Reminder ────────────────────────────────────────── -->
+    <section class="section" id="section-reminder">
+      <h2 class="section__heading" id="heading-reminder">Task Reminder</h2>
+      <div class="field">
+        <input class="field__input" id="task-reminder" type="text"
+               placeholder="What should you be working on right now?" />
+      </div>
+    </section>
+
+    <!-- ── 7. Data ─────────────────────────────────────────────────── -->
+    <section class="section" id="section-data">
+      <h2 class="section__heading" id="heading-data">Data</h2>
+      <div class="btn-row btn-row--wrap">
+        <button class="btn btn--outline" id="export-btn">Export Settings</button>
+        <button class="btn btn--outline" id="import-btn">Import Settings</button>
+        <button class="btn btn--outline btn--danger" id="clear-stats-btn">
+          Clear All Stats
+        </button>
+      </div>
+      <!-- Hidden file input for import -->
+      <input type="file" id="import-file-input" accept=".json" hidden />
+      <p class="field-msg" id="data-msg" hidden></p>
+    </section>
+
+    <!-- ── Save bar ─────────────────────────────────────────────────── -->
+    <div class="save-bar">
+      <p class="save-bar__msg" id="save-msg" hidden></p>
+      <button class="btn btn--accent btn--large" id="save-btn">Save</button>
+    </div>
+
+  </div>
+
+  <script src="settings.js" type="module"></script>
+</body>
+</html>

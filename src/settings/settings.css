@@ -1,0 +1,336 @@
+/* ── Yozakura Settings Page Styles ──────────────────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg:      #1a1b26;
+  --surface: #24253a;
+  --border:  #2a2b40;
+  --text:    #c0caf5;
+  --muted:   #565f89;
+  --accent:  #7dcfff;
+  --pink:    #ff79c6;
+  --purple:  #bd93f9;
+  --red:     #f7768e;
+  --green:   #9ece6a;
+  --radius:  8px;
+}
+
+html {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  min-height: 100vh;
+  padding-bottom: 80px; /* space for sticky save bar */
+}
+
+/* ── Page layout ────────────────────────────────────────────────────────── */
+
+.page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 20px 40px;
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────── */
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 28px 0 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+
+.page-header__kanji {
+  font-size: 32px;
+  color: var(--pink);
+  text-shadow: 0 0 20px #ff79c680;
+}
+
+.page-header__title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.5px;
+}
+
+/* ── Sections ───────────────────────────────────────────────────────────── */
+
+.section {
+  margin-top: 28px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section:last-of-type {
+  border-bottom: none;
+}
+
+.section__heading {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+/* ── Fields ─────────────────────────────────────────────────────────────── */
+
+.field {
+  margin-bottom: 12px;
+}
+
+.field--inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+
+.field--inline .field__label {
+  margin-bottom: 0;
+  cursor: pointer;
+}
+
+.field--row {
+  display: flex;
+  gap: 16px;
+}
+
+.field__sub {
+  flex: 1;
+}
+
+.field__label {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.field__input {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  padding: 8px 12px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s;
+  appearance: none;
+}
+
+.field__input:focus {
+  border-color: var(--accent);
+}
+
+.field__input::placeholder {
+  color: var(--muted);
+}
+
+.field__input--time {
+  width: auto;
+  min-width: 120px;
+}
+
+.field__input--number {
+  width: 90px;
+  text-align: center;
+}
+
+.field__select {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  padding: 8px 12px;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23565f89' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+.field__select:focus {
+  border-color: var(--accent);
+}
+
+.field__input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.field__input-row .field__input {
+  flex: 1;
+}
+
+/* ── Checkbox ───────────────────────────────────────────────────────────── */
+
+.checkbox-input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* ── Radio group ────────────────────────────────────────────────────────── */
+
+.radio-group {
+  display: flex;
+  gap: 20px;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.radio-input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+/* ── Button row ─────────────────────────────────────────────────────────── */
+
+.btn-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.btn-row--wrap {
+  flex-wrap: wrap;
+}
+
+/* ── Messages ───────────────────────────────────────────────────────────── */
+
+.field-msg {
+  font-size: 12px;
+  color: var(--green);
+  margin-top: 6px;
+  min-height: 18px;
+}
+
+.field-msg--error {
+  color: var(--red);
+}
+
+.field-msg[hidden] {
+  display: none;
+}
+
+/* ── Buttons ────────────────────────────────────────────────────────────── */
+
+.btn {
+  border: none;
+  border-radius: var(--radius);
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s, box-shadow 0.15s;
+  white-space: nowrap;
+}
+
+.btn:active {
+  opacity: 0.8;
+}
+
+.btn--accent {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.btn--accent:hover {
+  box-shadow: 0 0 12px #7dcfff60;
+}
+
+.btn--large {
+  padding: 10px 28px;
+  font-size: 14px;
+}
+
+.btn--outline {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+
+.btn--outline:hover {
+  color: var(--text);
+  border-color: var(--muted);
+}
+
+.btn--danger {
+  border-color: #f7768e40;
+  color: var(--red);
+}
+
+.btn--danger:hover {
+  background: #f7768e15;
+  border-color: var(--red);
+}
+
+.btn--icon {
+  padding: 7px 12px;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+/* ── Sticky save bar ────────────────────────────────────────────────────── */
+
+.save-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  z-index: 50;
+  backdrop-filter: blur(8px);
+}
+
+.save-bar__msg {
+  font-size: 13px;
+  color: var(--green);
+  flex: 1;
+}
+
+.save-bar__msg[hidden] {
+  display: none;
+}
