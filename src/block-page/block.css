@@ -1,0 +1,212 @@
+/* ── Yozakura Block Page Styles ──────────────────────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg:      #1a1b26;
+  --surface: #1e2030;
+  --border:  #7dcfff20;
+  --text:    #c0caf5;
+  --muted:   #565f89;
+  --accent:  #7dcfff;
+  --pink:    #ff79c6;
+  --purple:  #bd93f9;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", system-ui, sans-serif;
+  overflow: hidden;
+}
+
+/* ── Matrix canvas ──────────────────────────────────────────────────────── */
+
+#matrix-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+/* ── Card ───────────────────────────────────────────────────────────────── */
+
+.card {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+
+  width: min(480px, 90vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+
+  /* Glassmorphism */
+  background: rgba(26, 27, 38, 0.82);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 36px 32px 28px;
+  box-shadow:
+    0 0 0 1px #7dcfff10,
+    0 16px 64px #00000080,
+    inset 0 1px 0 #7dcfff15;
+
+  animation: cardFadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes cardFadeIn {
+  from { opacity: 0; transform: translate(-50%, -48%) scale(0.97); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* ── Card header ────────────────────────────────────────────────────────── */
+
+.card__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.card__kanji {
+  font-size: 28px;
+  color: var(--pink);
+  text-shadow: 0 0 20px #ff79c680;
+  line-height: 1;
+}
+
+.card__title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.5px;
+}
+
+.card__blocked-by {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 20px;
+  letter-spacing: 0.5px;
+}
+
+/* ── Info rows ──────────────────────────────────────────────────────────── */
+
+.card__site-row,
+.card__timer-row,
+.card__hits-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.card__site-label,
+.card__timer-label,
+.card__hits-label {
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.card__site-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent);
+  word-break: break-all;
+  text-shadow: 0 0 12px #7dcfff50;
+}
+
+.card__timer-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--purple);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 16px #bd93f960;
+  letter-spacing: 2px;
+}
+
+.card__hits-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--pink);
+}
+
+/* ── Task reminder ──────────────────────────────────────────────────────── */
+
+.card__reminder {
+  background: rgba(189, 147, 249, 0.08);
+  border: 1px solid rgba(189, 147, 249, 0.2);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin: 14px 0;
+}
+
+.card__reminder[hidden] {
+  display: none;
+}
+
+.card__reminder-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--purple);
+  margin-bottom: 4px;
+}
+
+.card__reminder-text {
+  font-size: 14px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* ── AI quote ───────────────────────────────────────────────────────────── */
+
+.card__quote {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.card__quote-icon {
+  font-size: 16px;
+  color: var(--pink);
+  flex-shrink: 0;
+  margin-top: 1px;
+  text-shadow: 0 0 8px #ff79c680;
+  animation: pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+.card__quote-text {
+  font-size: 13px;
+  color: var(--muted);
+  font-style: italic;
+  line-height: 1.6;
+  transition: color 0.4s;
+}
+
+.card__quote-text.loaded {
+  color: var(--text);
+}

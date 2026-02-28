@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>夜桜 — Site Blocked</title>
+  <link rel="stylesheet" href="block.css" />
+</head>
+<body>
+
+  <!-- Full-screen matrix canvas (behind everything) -->
+  <canvas id="matrix-canvas"></canvas>
+
+  <!-- Centred glassmorphism card -->
+  <div class="card" id="block-card">
+    <div class="card__header">
+      <span class="card__kanji">夜桜</span>
+      <h1 class="card__title" id="card-title">Site Blocked</h1>
+    </div>
+
+    <p class="card__blocked-by" id="card-blocked-by">Blocked by Yozakura</p>
+
+    <!-- Blocked domain name -->
+    <div class="card__site-row">
+      <span class="card__site-label" id="site-label">Site:</span>
+      <span class="card__site-name" id="site-name">—</span>
+    </div>
+
+    <!-- Countdown timer until unblock -->
+    <div class="card__timer-row" id="timer-row">
+      <span class="card__timer-label" id="timer-label">Unblocks in</span>
+      <span class="card__timer-value" id="timer-value">—</span>
+    </div>
+
+    <!-- Daily hit count -->
+    <div class="card__hits-row">
+      <span class="card__hits-label" id="hits-label">Attempts today:</span>
+      <span class="card__hits-value" id="hits-value">0</span>
+    </div>
+
+    <!-- Task reminder -->
+    <div class="card__reminder" id="reminder-section" hidden>
+      <p class="card__reminder-label" id="reminder-label">You should be working on:</p>
+      <p class="card__reminder-text" id="reminder-text"></p>
+    </div>
+
+    <!-- AI quote -->
+    <div class="card__quote" id="quote-section">
+      <span class="card__quote-icon">✦</span>
+      <p class="card__quote-text" id="quote-text">…</p>
+    </div>
+  </div>
+
+  <script src="block.js" type="module"></script>
+</body>
+</html>
