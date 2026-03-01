@@ -48,6 +48,11 @@
       "matches": ["https://twitter.com/*", "https://x.com/*"],
       "js": ["src/content/twitter-filter.js"],
       "run_at": "document_end"
+    },
+    {
+      "matches": ["https://www.reddit.com/*"],
+      "js": ["src/content/reddit-filter.js"],
+      "run_at": "document_end"
     }
   ]
 }

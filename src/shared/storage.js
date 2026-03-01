@@ -82,6 +82,12 @@ const DEFAULT_STATE = {
       hideTrending: false,
       hideWhoToFollow: false,
       hideNotifBadge: false,
+    },
+    redditFilter: {
+      hideFeed: false,
+      hidePromoted: false,
+      hideNsfw: false,
+      hideAwards: false,
     }
   },
   stats: {}
@@ -115,6 +121,9 @@ async function _readAll() {
       );
       merged.settings.twitterFilter = Object.assign(
         {}, DEFAULT_STATE.settings.twitterFilter, merged.settings.twitterFilter
+      );
+      merged.settings.redditFilter = Object.assign(
+        {}, DEFAULT_STATE.settings.redditFilter, merged.settings.redditFilter
       );
       resolve(merged);
     });
@@ -161,6 +170,9 @@ export async function saveSettings(partial) {
   }
   if (partial.twitterFilter) {
     updated.twitterFilter = Object.assign({}, all.settings.twitterFilter, partial.twitterFilter);
+  }
+  if (partial.redditFilter) {
+    updated.redditFilter = Object.assign({}, all.settings.redditFilter, partial.redditFilter);
   }
   await _write({ settings: updated });
 }

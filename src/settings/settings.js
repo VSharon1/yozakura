@@ -72,6 +72,11 @@ function applyTranslations() {
   document.getElementById("label-tw-hide-trending").textContent = tr("settings.twHideTrending");
   document.getElementById("label-tw-hide-who-to-follow").textContent = tr("settings.twHideWhoToFollow");
   document.getElementById("label-tw-hide-notif-badge").textContent = tr("settings.twHideNotifBadge");
+  document.getElementById("heading-reddit").textContent = tr("settings.sectionReddit");
+  document.getElementById("label-rd-hide-feed").textContent = tr("settings.rdHideFeed");
+  document.getElementById("label-rd-hide-promoted").textContent = tr("settings.rdHidePromoted");
+  document.getElementById("label-rd-hide-nsfw").textContent = tr("settings.rdHideNsfw");
+  document.getElementById("label-rd-hide-awards").textContent = tr("settings.rdHideAwards");
   document.getElementById("heading-reminder").textContent = tr("settings.sectionReminder");
   document.getElementById("task-reminder").placeholder = tr("settings.reminderPlaceholder");
   document.getElementById("heading-stats").textContent = tr("settings.sectionStats");
@@ -203,6 +208,13 @@ async function populateForm() {
   document.getElementById("tw-hide-trending").checked      = tf.hideTrending      ?? false;
   document.getElementById("tw-hide-who-to-follow").checked = tf.hideWhoToFollow   ?? false;
   document.getElementById("tw-hide-notif-badge").checked   = tf.hideNotifBadge    ?? false;
+
+  // Reddit filters
+  const rf = settings.redditFilter ?? {};
+  document.getElementById("rd-hide-feed").checked     = rf.hideFeed     ?? false;
+  document.getElementById("rd-hide-promoted").checked = rf.hidePromoted ?? false;
+  document.getElementById("rd-hide-nsfw").checked     = rf.hideNsfw     ?? false;
+  document.getElementById("rd-hide-awards").checked   = rf.hideAwards   ?? false;
 
   // Task reminder
   document.getElementById("task-reminder").value = settings.taskReminder ?? "";
@@ -415,6 +427,17 @@ function wireEvents() {
   ]) {
     document.getElementById(id).addEventListener("change", async (e) => {
       await saveSettings({ twitterFilter: { [key]: e.target.checked } });
+    });
+  }
+
+  for (const [id, key] of [
+    ["rd-hide-feed",     "hideFeed"],
+    ["rd-hide-promoted", "hidePromoted"],
+    ["rd-hide-nsfw",     "hideNsfw"],
+    ["rd-hide-awards",   "hideAwards"],
+  ]) {
+    document.getElementById(id).addEventListener("change", async (e) => {
+      await saveSettings({ redditFilter: { [key]: e.target.checked } });
     });
   }
 
