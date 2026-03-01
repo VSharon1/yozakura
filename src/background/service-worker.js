@@ -18,6 +18,10 @@ import {
   getAllowlist,
   addAllowSite,
   removeAllowSite,
+  getAllowanceSessions,
+  setAllowanceSession,
+  clearAllowanceSession,
+  recordAllowanceUsage,
   initDefaults
 } from "../shared/storage.js";
 
@@ -26,6 +30,7 @@ import {
 const ALARM_DURATION_END = "yozakura-duration-end";
 const ALARM_SCHEDULE_CHECK = "yozakura-schedule-check";
 const ALARM_POMODORO = "yozakura-pomodoro";
+const ALARM_ALLOWANCE_PREFIX = "yozakura-allowance-";
 
 // Base URL for the block page (built at runtime since extension ID varies)
 const BLOCK_PAGE_BASE = chrome.runtime.getURL("src/block-page/block.html");
@@ -59,6 +64,9 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
     await handleScheduleCheck();
   } else if (alarm.name === ALARM_POMODORO) {
     await handlePomodoroTick();
+  } else if (alarm.name.startsWith(ALARM_ALLOWANCE_PREFIX)) {
+    const domain = decodeURIComponent(alarm.name.slice(ALARM_ALLOWANCE_PREFIX.length));
+    await handleAllowanceExpired(domain);
   }
 });
 
@@ -103,6 +111,13 @@ async function handlePomodoroTick() {
     console.log("[Yozakura] Pomodoro: break → work");
   }
   await updateDNRRules();
+}
+
+/** Allowance session expired — re-block the domain. */
+async function handleAllowanceExpired(domain) {
+  await clearAllowanceSession(domain);
+  await updateDNRRules();
+  console.log(`[Yozakura] Allowance session expired for ${domain}.`);
 }
 
 // ─── Block-active logic ───────────────────────────────────────────────────────
@@ -191,6 +206,8 @@ export async function updateDNRRules() {
   const existingIds = existingRules.map((r) => r.id);
 
   const addRules = [];
+  const sessions = await getAllowanceSessions();
+  const now = Date.now();
 
   if (settings.mode === "allowlist") {
     // Catch-all redirect (priority 1) + per-domain allow rules (priority 2)
@@ -225,6 +242,8 @@ export async function updateDNRRules() {
     }
   } else if (active && blocklist.length > 0) {
     for (const domain of blocklist) {
+      // Skip if an active allowance session is in progress for this domain
+      if (sessions[domain] && now < sessions[domain]) continue;
       const id = domainToRuleId(domain);
       const redirectUrl = `${BLOCK_PAGE_BASE}?site=${encodeURIComponent(domain)}`;
       addRules.push({
@@ -339,6 +358,17 @@ async function handleMessage(msg) {
       await updateDNRRules();
       return { ok: true };
     }
+    case "USE_ALLOWANCE": {
+      const { domain, minutes } = msg;
+      await recordAllowanceUsage(domain, minutes);
+      await setAllowanceSession(domain, Date.now() + minutes * 60_000);
+      await updateDNRRules();
+      const alarmName = `${ALARM_ALLOWANCE_PREFIX}${encodeURIComponent(domain)}`;
+      await chrome.alarms.clear(alarmName);
+      chrome.alarms.create(alarmName, { delayInMinutes: minutes });
+      console.log(`[Yozakura] Allowance session: ${domain} for ${minutes} min.`);
+      return { ok: true };
+    }
     case "SET_ALLOWLIST": {
       if (msg.active) {
         await saveSettings({ mode: "allowlist" });
@@ -422,6 +452,23 @@ async function restoreAlarms() {
     } else {
       // Phase ended while browser was closed — process tick immediately
       await handlePomodoroTick();
+    }
+  }
+
+  // Restore allowance session alarms
+  const sessions = await getAllowanceSessions();
+  const now = Date.now();
+  for (const [domain, endMs] of Object.entries(sessions)) {
+    const remaining = (endMs - now) / 60_000;
+    if (remaining > 0) {
+      const alarmName = `${ALARM_ALLOWANCE_PREFIX}${encodeURIComponent(domain)}`;
+      const alarm = await chrome.alarms.get(alarmName);
+      if (!alarm) {
+        chrome.alarms.create(alarmName, { delayInMinutes: remaining });
+      }
+    } else {
+      // Session expired while browser was closed
+      await clearAllowanceSession(domain);
     }
   }
 }

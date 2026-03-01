@@ -79,6 +79,10 @@ export const translations = {
     "block.pomodoroWork": "Stay focused — work session active",
     "block.pomodoroBreak": "Break in",
     "block.fallbackQuote": "A sword that is never drawn grows dull. Sharpen your mind — return to your task.",
+    "block.allowanceLabel": "Daily allowance:",
+    "block.allowanceLeft": "min left",
+    "block.allowanceMinutes": "min",
+    "block.allowanceBtn": "Start Session",
 
     // ── Settings ─────────────────────────────────────────────────────────────
     "settings.title": "Yozakura Settings",
@@ -123,6 +127,8 @@ export const translations = {
     "settings.pomodoroBreak": "Break (minutes)",
     "settings.sectionReminder": "Task Reminder",
     "settings.reminderPlaceholder": "What should you be working on right now?",
+    "settings.sectionAllowance": "Daily Allowance",
+    "settings.allowanceMinutes": "Minutes per site per day (0 = off)",
     "settings.sectionYoutube": "YouTube Filters",
     "settings.ytHideShorts": "Hide Shorts shelf",
     "settings.ytHideSidebar": "Hide recommendations sidebar",
@@ -210,6 +216,10 @@ export const translations = {
     "block.pomodoroWork": "Konzentriert bleiben — Arbeitssitzung aktiv",
     "block.pomodoroBreak": "Pause in",
     "block.fallbackQuote": "Ein Schwert, das nie gezogen wird, wird stumpf. Schärfe deinen Geist — kehre zu deiner Aufgabe zurück.",
+    "block.allowanceLabel": "Tageslimit:",
+    "block.allowanceLeft": "Min verbleibend",
+    "block.allowanceMinutes": "Min",
+    "block.allowanceBtn": "Sitzung starten",
 
     // ── Settings ─────────────────────────────────────────────────────────────
     "settings.title": "Yozakura Einstellungen",
@@ -254,6 +264,8 @@ export const translations = {
     "settings.pomodoroBreak": "Pause (Minuten)",
     "settings.sectionReminder": "Aufgabenerinnerung",
     "settings.reminderPlaceholder": "Woran solltest du gerade arbeiten?",
+    "settings.sectionAllowance": "Tageslimit",
+    "settings.allowanceMinutes": "Minuten pro Seite pro Tag (0 = aus)",
     "settings.sectionYoutube": "YouTube-Filter",
     "settings.ytHideShorts": "Shorts-Bereich ausblenden",
     "settings.ytHideSidebar": "Empfehlungsleiste ausblenden",

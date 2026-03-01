@@ -60,6 +60,8 @@ function applyTranslations() {
   document.getElementById("heading-pomodoro").textContent = tr("settings.sectionPomodoro");
   document.getElementById("label-pom-work").textContent = tr("settings.pomodoroWork");
   document.getElementById("label-pom-break").textContent = tr("settings.pomodoroBreak");
+  document.getElementById("heading-allowance").textContent = tr("settings.sectionAllowance");
+  document.getElementById("label-allowance-minutes").textContent = tr("settings.allowanceMinutes");
   document.getElementById("heading-youtube").textContent = tr("settings.sectionYoutube");
   document.getElementById("label-yt-hide-shorts").textContent = tr("settings.ytHideShorts");
   document.getElementById("label-yt-hide-sidebar").textContent = tr("settings.ytHideSidebar");
@@ -180,6 +182,9 @@ async function populateForm() {
   // Challenge
   document.getElementById("challenge-enabled").checked = settings.challengeEnabled ?? false;
 
+  // Daily allowance
+  document.getElementById("allowance-minutes").value = settings.allowanceMinutes ?? 0;
+
   // YouTube filters
   const yf = settings.youtubeFilter ?? {};
   document.getElementById("yt-hide-shorts").checked     = yf.hideShorts    ?? false;
@@ -214,6 +219,7 @@ async function saveAll() {
 
   const partial = {
     language: selectedLang,
+    allowanceMinutes: parseInt(document.getElementById("allowance-minutes").value, 10) || 0,
     taskReminder: document.getElementById("task-reminder").value.trim(),
     schedule: {
       enabled: document.getElementById("schedule-enable").checked,

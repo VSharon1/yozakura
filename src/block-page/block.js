@@ -15,7 +15,8 @@ import {
   getSettings,
   getStats,
   incrementHit,
-  getTodayHits
+  getTodayHits,
+  getTodayAllowanceUsed
 } from "../shared/storage.js";
 import { fetchQuote } from "../shared/ai-quotes.js";
 
@@ -132,6 +133,10 @@ function applyI18n(lang) {
   document.getElementById("timer-label").textContent = t("block.unblockIn", lang);
   document.getElementById("hits-label").textContent = t("block.hitsToday", lang);
   document.getElementById("reminder-label").textContent = t("block.taskReminder", lang);
+  document.getElementById("allowance-label-text").textContent = t("block.allowanceLabel", lang);
+  document.getElementById("allowance-left-text").textContent = t("block.allowanceLeft", lang);
+  document.getElementById("allowance-min-label").textContent = t("block.allowanceMinutes", lang);
+  document.getElementById("allowance-btn").textContent = t("block.allowanceBtn", lang);
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
@@ -159,6 +164,36 @@ async function init() {
   // Show updated hit count (use pre-incremented stats + 1)
   const todayHits = await getTodayHits(site, stats);
   document.getElementById("hits-value").textContent = todayHits + 1;
+
+  // Daily allowance
+  const allowanceMinutes = settings.allowanceMinutes ?? 0;
+  if (allowanceMinutes > 0 && settings.mode !== "allowlist") {
+    const usedToday = await getTodayAllowanceUsed(site);
+    const remaining = Math.max(0, allowanceMinutes - usedToday);
+    if (remaining > 0) {
+      const input = document.getElementById("allowance-input");
+      const defaultMins = Math.min(15, remaining);
+      input.value = defaultMins;
+      input.max = remaining;
+      document.getElementById("allowance-remaining").textContent = remaining;
+      document.getElementById("allowance-section").hidden = false;
+
+      document.getElementById("allowance-btn").addEventListener("click", async () => {
+        const mins = Math.min(
+          Math.max(1, parseInt(input.value, 10) || defaultMins),
+          remaining
+        );
+        const resp = await chrome.runtime.sendMessage({
+          type: "USE_ALLOWANCE",
+          domain: site,
+          minutes: mins
+        });
+        if (resp?.ok) {
+          window.location.href = `https://${site}`;
+        }
+      });
+    }
+  }
 
   // Task reminder
   const reminder = settings.taskReminder?.trim();

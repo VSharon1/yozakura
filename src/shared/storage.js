@@ -62,6 +62,7 @@ const DEFAULT_STATE = {
     pomodoroPhaseEnd: null,
     pin: null,
     challengeEnabled: false,
+    allowanceMinutes: 0,
     language: "en",
     taskReminder: "",
     aiQuotes: {
@@ -290,6 +291,79 @@ export async function clearStats() {
  */
 export function todayKey() {
   return new Date().toISOString().slice(0, 10);
+}
+
+// ─── Daily Allowance ────────────────────────────────────────────────────────
+
+/**
+ * Returns minutes of allowance already used today for a domain.
+ * @param {string} domain
+ * @returns {Promise<number>}
+ */
+export async function getTodayAllowanceUsed(domain) {
+  return new Promise((resolve) => {
+    chrome.storage.local.get("allowanceUsage", (data) => {
+      resolve(data.allowanceUsage?.[todayKey()]?.[domain] ?? 0);
+    });
+  });
+}
+
+/**
+ * Records minutes of allowance used for a domain today.
+ * @param {string} domain
+ * @param {number} minutes
+ */
+export async function recordAllowanceUsage(domain, minutes) {
+  const today = todayKey();
+  return new Promise((resolve) => {
+    chrome.storage.local.get("allowanceUsage", (data) => {
+      const usage = data.allowanceUsage ?? {};
+      if (!usage[today]) usage[today] = {};
+      usage[today][domain] = (usage[today][domain] ?? 0) + minutes;
+      chrome.storage.local.set({ allowanceUsage: usage }, resolve);
+    });
+  });
+}
+
+/**
+ * Returns all active allowance sessions: { "domain": endTimestampMs }.
+ * @returns {Promise<object>}
+ */
+export async function getAllowanceSessions() {
+  return new Promise((resolve) => {
+    chrome.storage.local.get("allowanceSessions", (data) => {
+      resolve(data.allowanceSessions ?? {});
+    });
+  });
+}
+
+/**
+ * Records an active allowance session for a domain.
+ * @param {string} domain
+ * @param {number} endMs  Unix ms timestamp when session expires
+ */
+export async function setAllowanceSession(domain, endMs) {
+  return new Promise((resolve) => {
+    chrome.storage.local.get("allowanceSessions", (data) => {
+      const sessions = data.allowanceSessions ?? {};
+      sessions[domain] = endMs;
+      chrome.storage.local.set({ allowanceSessions: sessions }, resolve);
+    });
+  });
+}
+
+/**
+ * Clears an active allowance session for a domain.
+ * @param {string} domain
+ */
+export async function clearAllowanceSession(domain) {
+  return new Promise((resolve) => {
+    chrome.storage.local.get("allowanceSessions", (data) => {
+      const sessions = data.allowanceSessions ?? {};
+      delete sessions[domain];
+      chrome.storage.local.set({ allowanceSessions: sessions }, resolve);
+    });
+  });
 }
 
 // ─── Full export / import ───────────────────────────────────────────────────

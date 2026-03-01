@@ -38,6 +38,20 @@
       <span class="card__hits-value" id="hits-value">0</span>
     </div>
 
+    <!-- Daily allowance -->
+    <div class="card__allowance" id="allowance-section" hidden>
+      <p class="card__allowance-label">
+        <span id="allowance-label-text">Daily allowance:</span>
+        <strong class="card__allowance-remaining" id="allowance-remaining">0</strong>
+        <span id="allowance-left-text">min left</span>
+      </p>
+      <div class="card__allowance-row">
+        <input type="number" class="card__allowance-input" id="allowance-input" min="1" value="15" />
+        <span id="allowance-min-label">min</span>
+        <button class="card__allowance-btn" id="allowance-btn">Start Session</button>
+      </div>
+    </div>
+
     <!-- Task reminder -->
     <div class="card__reminder" id="reminder-section" hidden>
       <p class="card__reminder-label" id="reminder-label">You should be working on:</p>

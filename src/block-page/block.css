@@ -146,6 +146,66 @@ html, body {
   color: var(--pink);
 }
 
+/* ── Daily allowance ────────────────────────────────────────────────────── */
+
+.card__allowance {
+  background: rgba(125, 207, 255, 0.07);
+  border: 1px solid rgba(125, 207, 255, 0.2);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin: 14px 0;
+}
+
+.card__allowance[hidden] { display: none; }
+
+.card__allowance-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.card__allowance-remaining {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.card__allowance-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card__allowance-input {
+  width: 58px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: rgba(26, 27, 38, 0.7);
+  color: var(--text);
+  font-size: 14px;
+  text-align: center;
+}
+
+.card__allowance-btn {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: none;
+  background: var(--accent);
+  color: var(--bg);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.card__allowance-btn:hover { opacity: 0.85; }
+
 /* ── Task reminder ──────────────────────────────────────────────────────── */
 
 .card__reminder {
