@@ -20,7 +20,7 @@ A Chromium extension (Manifest V3) that blocks distracting websites and greets y
   - Glassmorphism card showing the blocked site, countdown timer, daily hit count, your task reminder, and an AI-generated quote
 
 - **AI-generated quotes:**
-  - Supports OpenAI (gpt-4o), Anthropic (claude-3-5-haiku), and Google Gemini (gemini-1.5-flash)
+  - Supports OpenAI (gpt-4o-mini), Anthropic (claude-haiku-4-5), and Google Gemini (gemini-2.0-flash)
   - Configurable anime character style, tone (motivational / philosophical / stern / funny)
   - Hardcoded fallback quotes when no API key is set
 
@@ -61,7 +61,7 @@ A Chromium extension (Manifest V3) that blocks distracting websites and greets y
 yozakura/
 ├── manifest.json                  # MV3 manifest
 ├── README.md
-├── _dev-notes.md                  # Architecture decisions
+├── dev-notes.md                   # Architecture decisions
 ├── src/
 │   ├── background/
 │   │   └── service-worker.js      # DNR rules, block modes, alarms
@@ -87,6 +87,59 @@ yozakura/
         ├── icon48.png
         └── icon128.png
 ```
+
+---
+
+## Roadmap
+
+### Phase 1 — Polish ✅ done
+
+| # | What | Files touched |
+|---|------|---------------|
+| 1 | Update outdated AI model IDs (`gpt-4o-mini`, `claude-haiku-4-5`, `gemini-2.0-flash`) | `ai-quotes.js`, `i18n.js`, `settings.html` |
+| 2 | Move hardcoded EN-only fallback quote into i18n system (`block.fallbackQuote`) | `block.js`, `i18n.js` |
+| 3 | Domain input validation (strip protocol, hostname check) + duplicate detection with inline feedback in popup | `popup.js`, `popup.html`, `popup.css`, `i18n.js` |
+| 4 | Schedule time validation (HH:MM regex) before saving settings | `settings.js`, `i18n.js` |
+
+---
+
+### Phase 2 — Features (not yet started)
+
+#### Stats Dashboard
+Show blocked-attempt counts directly in the settings page. Data is already tracked daily per-domain in `chrome.storage.local` (under `stats`) — just needs a UI to read and display it.
+
+- Add a "Stats" section to `src/settings/settings.html` + `settings.js`
+- Read `storage.getStats()`, render a table of today's hits per domain plus a 7-day total row
+- No new storage work required
+
+#### Challenge-to-Unblock
+Require the user to type a randomly-generated 20-character string before blocking can be disabled. Reduces impulsive override.
+
+- Add `challengeEnabled: false` to `DEFAULT_STATE` in `storage.js`
+- Add checkbox in `settings.html` / `settings.js`, persist to `settings.challengeEnabled`
+- Add challenge modal overlay in `popup.html` / `popup.js`; intercept all disable actions (manual toggle off, stop pomodoro, etc.)
+- Add translation keys to `i18n.js`
+
+#### YouTube Content Filtering
+Inject CSS to hide specific YouTube elements (Shorts shelf, recommendations sidebar, comments, thumbnails) without blocking the whole site. Controlled by per-element toggles in settings.
+
+- New `src/content/youtube-filter.js` content script; reads storage and injects hiding CSS
+- Add `content_scripts` entry to `manifest.json` (matches `youtube.com`)
+- Add `youtubeFilter` object to `DEFAULT_STATE` in `storage.js`
+- Add YouTube filter section to `settings.html` / `settings.js`
+
+#### Allow-Only (Whitelist) Mode
+Instead of specifying what to block, specify what you're _allowed_ to visit — everything else redirects to the block page. A different mental model suited to deep-work sessions.
+
+- Add `allowlist: []` to `DEFAULT_STATE`; add `getAllowlist()`, `addAllowSite()`, `removeAllowSite()` to `storage.js`
+- Add a fifth mode `"allowlist"` to `isBlockingActive()` and `updateDNRRules()` in `service-worker.js`
+  - One catch-all DNR rule blocks `*` (`main_frame`), allowlist entries get priority-2 `allow` rules
+- Add `ADD_ALLOWSITE` / `REMOVE_ALLOWSITE` message handlers in `service-worker.js`
+- Add allowlist management UI to `popup.html` / `popup.js`
+- Add translation keys to `i18n.js`
+
+#### Daily Allowance _(deferred — complex)_
+Allow N minutes/day on a blocked site before full blocking kicks in. Requires per-domain state tracking, a timer on the block page, and integration with the stats system. Skipped for now.
 
 ---
 
