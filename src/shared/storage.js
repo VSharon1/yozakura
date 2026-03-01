@@ -94,6 +94,12 @@ const DEFAULT_STATE = {
       hideExplore: false,
       hideReels: false,
       hideSuggested: false,
+    },
+    linkedinFilter: {
+      hideFeed: false,
+      hidePymk: false,
+      hideNews: false,
+      hidePromoted: false,
     }
   },
   stats: {}
@@ -133,6 +139,9 @@ async function _readAll() {
       );
       merged.settings.instagramFilter = Object.assign(
         {}, DEFAULT_STATE.settings.instagramFilter, merged.settings.instagramFilter
+      );
+      merged.settings.linkedinFilter = Object.assign(
+        {}, DEFAULT_STATE.settings.linkedinFilter, merged.settings.linkedinFilter
       );
       resolve(merged);
     });
@@ -185,6 +194,9 @@ export async function saveSettings(partial) {
   }
   if (partial.instagramFilter) {
     updated.instagramFilter = Object.assign({}, all.settings.instagramFilter, partial.instagramFilter);
+  }
+  if (partial.linkedinFilter) {
+    updated.linkedinFilter = Object.assign({}, all.settings.linkedinFilter, partial.linkedinFilter);
   }
   await _write({ settings: updated });
 }

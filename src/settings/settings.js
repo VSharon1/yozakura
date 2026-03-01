@@ -82,6 +82,11 @@ function applyTranslations() {
   document.getElementById("label-ig-hide-explore").textContent = tr("settings.igHideExplore");
   document.getElementById("label-ig-hide-reels").textContent = tr("settings.igHideReels");
   document.getElementById("label-ig-hide-suggested").textContent = tr("settings.igHideSuggested");
+  document.getElementById("heading-linkedin").textContent = tr("settings.sectionLinkedin");
+  document.getElementById("label-li-hide-feed").textContent = tr("settings.liHideFeed");
+  document.getElementById("label-li-hide-pymk").textContent = tr("settings.liHidePymk");
+  document.getElementById("label-li-hide-news").textContent = tr("settings.liHideNews");
+  document.getElementById("label-li-hide-promoted").textContent = tr("settings.liHidePromoted");
   document.getElementById("heading-reminder").textContent = tr("settings.sectionReminder");
   document.getElementById("task-reminder").placeholder = tr("settings.reminderPlaceholder");
   document.getElementById("heading-stats").textContent = tr("settings.sectionStats");
@@ -227,6 +232,13 @@ async function populateForm() {
   document.getElementById("ig-hide-explore").checked   = igf.hideExplore   ?? false;
   document.getElementById("ig-hide-reels").checked     = igf.hideReels     ?? false;
   document.getElementById("ig-hide-suggested").checked = igf.hideSuggested ?? false;
+
+  // LinkedIn filters
+  const lif = settings.linkedinFilter ?? {};
+  document.getElementById("li-hide-feed").checked     = lif.hideFeed     ?? false;
+  document.getElementById("li-hide-pymk").checked     = lif.hidePymk     ?? false;
+  document.getElementById("li-hide-news").checked     = lif.hideNews     ?? false;
+  document.getElementById("li-hide-promoted").checked = lif.hidePromoted ?? false;
 
   // Task reminder
   document.getElementById("task-reminder").value = settings.taskReminder ?? "";
@@ -461,6 +473,17 @@ function wireEvents() {
   ]) {
     document.getElementById(id).addEventListener("change", async (e) => {
       await saveSettings({ instagramFilter: { [key]: e.target.checked } });
+    });
+  }
+
+  for (const [id, key] of [
+    ["li-hide-feed",     "hideFeed"],
+    ["li-hide-pymk",     "hidePymk"],
+    ["li-hide-news",     "hideNews"],
+    ["li-hide-promoted", "hidePromoted"],
+  ]) {
+    document.getElementById(id).addEventListener("change", async (e) => {
+      await saveSettings({ linkedinFilter: { [key]: e.target.checked } });
     });
   }
 
