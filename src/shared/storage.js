@@ -68,6 +68,12 @@ const DEFAULT_STATE = {
       apiKey: "",
       character: "",
       tone: "motivational"
+    },
+    youtubeFilter: {
+      hideShorts: false,
+      hideSidebar: false,
+      hideComments: false,
+      hideThumbnails: false,
     }
   },
   stats: {}
@@ -94,6 +100,9 @@ async function _readAll() {
       );
       merged.settings.aiQuotes = Object.assign(
         {}, DEFAULT_STATE.settings.aiQuotes, merged.settings.aiQuotes
+      );
+      merged.settings.youtubeFilter = Object.assign(
+        {}, DEFAULT_STATE.settings.youtubeFilter, merged.settings.youtubeFilter
       );
       resolve(merged);
     });
@@ -134,6 +143,9 @@ export async function saveSettings(partial) {
   }
   if (partial.aiQuotes) {
     updated.aiQuotes = Object.assign({}, all.settings.aiQuotes, partial.aiQuotes);
+  }
+  if (partial.youtubeFilter) {
+    updated.youtubeFilter = Object.assign({}, all.settings.youtubeFilter, partial.youtubeFilter);
   }
   await _write({ settings: updated });
 }

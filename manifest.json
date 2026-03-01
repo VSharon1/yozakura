@@ -37,5 +37,12 @@
       "resources": ["src/block-page/block.html"],
       "matches": ["<all_urls>"]
     }
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["src/content/youtube-filter.js"],
+      "run_at": "document_end"
+    }
   ]
 }

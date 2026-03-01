@@ -60,6 +60,11 @@ function applyTranslations() {
   document.getElementById("heading-pomodoro").textContent = tr("settings.sectionPomodoro");
   document.getElementById("label-pom-work").textContent = tr("settings.pomodoroWork");
   document.getElementById("label-pom-break").textContent = tr("settings.pomodoroBreak");
+  document.getElementById("heading-youtube").textContent = tr("settings.sectionYoutube");
+  document.getElementById("label-yt-hide-shorts").textContent = tr("settings.ytHideShorts");
+  document.getElementById("label-yt-hide-sidebar").textContent = tr("settings.ytHideSidebar");
+  document.getElementById("label-yt-hide-comments").textContent = tr("settings.ytHideComments");
+  document.getElementById("label-yt-hide-thumbnails").textContent = tr("settings.ytHideThumbnails");
   document.getElementById("heading-reminder").textContent = tr("settings.sectionReminder");
   document.getElementById("task-reminder").placeholder = tr("settings.reminderPlaceholder");
   document.getElementById("heading-stats").textContent = tr("settings.sectionStats");
@@ -174,6 +179,13 @@ async function populateForm() {
 
   // Challenge
   document.getElementById("challenge-enabled").checked = settings.challengeEnabled ?? false;
+
+  // YouTube filters
+  const yf = settings.youtubeFilter ?? {};
+  document.getElementById("yt-hide-shorts").checked     = yf.hideShorts    ?? false;
+  document.getElementById("yt-hide-sidebar").checked    = yf.hideSidebar   ?? false;
+  document.getElementById("yt-hide-comments").checked   = yf.hideComments  ?? false;
+  document.getElementById("yt-hide-thumbnails").checked = yf.hideThumbnails ?? false;
 
   // Task reminder
   document.getElementById("task-reminder").value = settings.taskReminder ?? "";
@@ -365,6 +377,18 @@ function wireEvents() {
     await saveSettings({ challengeEnabled: e.target.checked });
     chrome.runtime.sendMessage({ type: "UPDATE_RULES" });
   });
+
+  for (const [id, key] of [
+    ["yt-hide-shorts",     "hideShorts"],
+    ["yt-hide-sidebar",    "hideSidebar"],
+    ["yt-hide-comments",   "hideComments"],
+    ["yt-hide-thumbnails", "hideThumbnails"],
+  ]) {
+    document.getElementById(id).addEventListener("change", async (e) => {
+      await saveSettings({ youtubeFilter: { [key]: e.target.checked } });
+    });
+  }
+
   setupKeyToggle();
 
   // Update AI key show/hide button label when language changes
