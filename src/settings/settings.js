@@ -34,6 +34,7 @@ function applyTranslations() {
   document.getElementById("label-pin-confirm").textContent = tr("settings.pinConfirm");
   document.getElementById("pin-set-btn").textContent = tr("settings.pinSet");
   document.getElementById("pin-remove-btn").textContent = tr("settings.pinRemove");
+  document.getElementById("label-challenge").textContent = tr("settings.challengeLabel");
   document.getElementById("heading-language").textContent = tr("settings.sectionLanguage");
   document.getElementById("label-lang-en").textContent = tr("settings.langEN");
   document.getElementById("label-lang-de").textContent = tr("settings.langDE");
@@ -167,6 +168,9 @@ async function populateForm() {
   document.getElementById("pom-work").value = settings.pomodoro?.workMinutes ?? 50;
   document.getElementById("pom-break").value = settings.pomodoro?.breakMinutes ?? 10;
 
+  // Challenge
+  document.getElementById("challenge-enabled").checked = settings.challengeEnabled ?? false;
+
   // Task reminder
   document.getElementById("task-reminder").value = settings.taskReminder ?? "";
 }
@@ -296,6 +300,10 @@ function wireEvents() {
   document.getElementById("import-btn").addEventListener("click", handleImport);
   document.getElementById("import-file-input").addEventListener("change", handleImportFile);
   document.getElementById("clear-stats-btn").addEventListener("click", handleClearStats);
+  document.getElementById("challenge-enabled").addEventListener("change", async (e) => {
+    await saveSettings({ challengeEnabled: e.target.checked });
+    chrome.runtime.sendMessage({ type: "UPDATE_RULES" });
+  });
   setupKeyToggle();
 
   // Update AI key show/hide button label when language changes

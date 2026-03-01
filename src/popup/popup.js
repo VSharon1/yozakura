@@ -13,6 +13,7 @@ import { t, translations } from "../shared/i18n.js";
 let lang = "en";          // Current UI language ("en" | "de")
 let pendingRemoveDomain = null;  // Domain waiting for PIN confirmation
 let timerInterval = null; // setInterval handle for mode badge countdown
+let state = null;         // Latest state from GET_STATE (set in refresh())
 
 // ─── Utility: message helper ──────────────────────────────────────────────────
 
@@ -59,6 +60,12 @@ function applyTranslations() {
   document.getElementById("pin-input").placeholder = tr("popup.pinPlaceholder");
   document.getElementById("pin-submit").textContent = tr("popup.pinSubmit");
   document.getElementById("pin-cancel").textContent = tr("general.cancel");
+  document.getElementById("challenge-modal-title").textContent = tr("popup.challengeTitle");
+  document.getElementById("challenge-modal-desc").textContent = tr("popup.challengeDesc");
+  document.getElementById("challenge-input").placeholder = tr("popup.challengePlaceholder");
+  document.getElementById("challenge-submit").textContent = tr("popup.challengeSubmit");
+  document.getElementById("challenge-cancel").textContent = tr("popup.challengeCancel");
+  document.getElementById("challenge-error").textContent = tr("popup.challengeError");
 }
 
 // ─── Mode badge ───────────────────────────────────────────────────────────────
@@ -233,6 +240,58 @@ document.getElementById("pin-input").addEventListener("keydown", (e) => {
   if (e.key === "Enter") document.getElementById("pin-submit").click();
 });
 
+// ─── Challenge modal ──────────────────────────────────────────────────────────
+
+// Excludes visually ambiguous characters (0/O, 1/l/I)
+const CHALLENGE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+
+function generateChallenge() {
+  const arr = new Uint8Array(20);
+  crypto.getRandomValues(arr);
+  return Array.from(arr, b => CHALLENGE_CHARS[b % CHALLENGE_CHARS.length]).join('');
+}
+
+let _challengePhrase = '';
+let _challengeCallback = null;
+
+function openChallengeModal(onConfirm) {
+  _challengePhrase = generateChallenge();
+  _challengeCallback = onConfirm;
+  document.getElementById('challenge-phrase').textContent = _challengePhrase;
+  document.getElementById('challenge-input').value = '';
+  document.getElementById('challenge-error').hidden = true;
+  document.getElementById('challenge-overlay').hidden = false;
+  document.getElementById('challenge-input').focus();
+}
+
+function closeChallengeModal() {
+  document.getElementById('challenge-overlay').hidden = true;
+  _challengeCallback = null;
+}
+
+document.getElementById('challenge-submit').addEventListener('click', () => {
+  const typed = document.getElementById('challenge-input').value;
+  if (typed === _challengePhrase) {
+    const cb = _challengeCallback;
+    closeChallengeModal();
+    cb?.();
+  } else {
+    document.getElementById('challenge-error').hidden = false;
+    document.getElementById('challenge-input').value = '';
+    document.getElementById('challenge-input').focus();
+  }
+});
+
+document.getElementById('challenge-cancel').addEventListener('click', closeChallengeModal);
+
+document.getElementById('challenge-overlay').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeChallengeModal();
+});
+
+document.getElementById('challenge-input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('challenge-submit').click();
+});
+
 // ─── Controls wiring ──────────────────────────────────────────────────────────
 
 function showAddMsg(text, isError = false) {
@@ -280,6 +339,14 @@ document.getElementById("add-input").addEventListener("keydown", (e) => {
 });
 
 document.getElementById("manual-toggle").addEventListener("change", async (e) => {
+  if (!e.target.checked && state?.settings?.challengeEnabled) {
+    e.target.checked = true; // revert visually until confirmed
+    openChallengeModal(async () => {
+      await sendMsg({ type: "SET_MANUAL", active: false });
+      refresh();
+    });
+    return;
+  }
   await sendMsg({ type: "SET_MANUAL", active: e.target.checked });
   refresh();
 });
@@ -290,6 +357,13 @@ document.getElementById("pomodoro-start-btn").addEventListener("click", async ()
 });
 
 document.getElementById("pomodoro-stop-btn").addEventListener("click", async () => {
+  if (state?.settings?.challengeEnabled) {
+    openChallengeModal(async () => {
+      await sendMsg({ type: "STOP_POMODORO" });
+      refresh();
+    });
+    return;
+  }
   await sendMsg({ type: "STOP_POMODORO" });
   refresh();
 });
@@ -350,7 +424,7 @@ function updateControlsVisibility(settings, active) {
 // ─── Main refresh ─────────────────────────────────────────────────────────────
 
 async function refresh() {
-  const state = await sendMsg({ type: "GET_STATE" });
+  state = await sendMsg({ type: "GET_STATE" });
   if (!state?.ok) return;
   const { settings, blocklist, active } = state;
 

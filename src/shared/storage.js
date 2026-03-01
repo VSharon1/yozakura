@@ -25,6 +25,7 @@
  *     pomodoroPhase: "idle"|"work"|"break",
  *     pomodoroPhaseEnd: number|null,
  *     pin: string|null,            // SHA-256 hex or null
+ *     challengeEnabled: boolean,
  *     language: "en"|"de",
  *     taskReminder: string,
  *     aiQuotes: {
@@ -59,6 +60,7 @@ const DEFAULT_STATE = {
     pomodoroPhase: "idle",
     pomodoroPhaseEnd: null,
     pin: null,
+    challengeEnabled: false,
     language: "en",
     taskReminder: "",
     aiQuotes: {

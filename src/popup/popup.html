@@ -97,6 +97,23 @@
     </div>
   </div>
 
+  <!-- ── Challenge modal ────────────────────────────────────── -->
+  <div class="pin-overlay" id="challenge-overlay" hidden>
+    <div class="pin-modal">
+      <h3 class="pin-modal__title" id="challenge-modal-title">Prove your intent</h3>
+      <p class="pin-modal__desc" id="challenge-modal-desc">Type the following to continue:</p>
+      <code style="display:block;text-align:center;font-size:13px;letter-spacing:1px;
+                   margin:8px 0;color:#7dcfff;" id="challenge-phrase"></code>
+      <input class="pin-modal__input" id="challenge-input" type="text"
+             autocomplete="off" spellcheck="false" placeholder="Type the phrase above" />
+      <p class="pin-modal__error" id="challenge-error" hidden>Incorrect. Try again.</p>
+      <div class="pin-modal__buttons">
+        <button class="btn btn--accent" id="challenge-submit">Disable</button>
+        <button class="btn btn--outline" id="challenge-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
   <script src="popup.js" type="module"></script>
 </body>
 </html>

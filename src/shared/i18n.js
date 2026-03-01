@@ -51,6 +51,12 @@ export const translations = {
     "popup.durationRemaining": "Blocking ends in",
     "popup.alreadyBlocked": "Already blocked",
     "popup.invalidDomain": "Invalid domain",
+    "popup.challengeTitle": "Prove your intent",
+    "popup.challengeDesc": "Type the following to continue:",
+    "popup.challengePlaceholder": "Type the phrase above",
+    "popup.challengeSubmit": "Disable",
+    "popup.challengeCancel": "Cancel",
+    "popup.challengeError": "Incorrect. Try again.",
 
     // ── Block Page ───────────────────────────────────────────────────────────
     "block.title": "Site Blocked",
@@ -79,6 +85,7 @@ export const translations = {
     "settings.pinWrong": "Incorrect current PIN.",
     "settings.pinSaved": "PIN saved.",
     "settings.pinRemoved": "PIN removed.",
+    "settings.challengeLabel": "Require typing challenge to disable blocking",
     "settings.sectionLanguage": "Language",
     "settings.langEN": "English",
     "settings.langDE": "Deutsch",
@@ -158,6 +165,12 @@ export const translations = {
     "popup.durationRemaining": "Sperre endet in",
     "popup.alreadyBlocked": "Bereits gesperrt",
     "popup.invalidDomain": "Ungültige Domain",
+    "popup.challengeTitle": "Absicht bestätigen",
+    "popup.challengeDesc": "Tippe folgendes zum Fortfahren:",
+    "popup.challengePlaceholder": "Phrase oben eingeben",
+    "popup.challengeSubmit": "Deaktivieren",
+    "popup.challengeCancel": "Abbrechen",
+    "popup.challengeError": "Falsch. Nochmal versuchen.",
 
     // ── Block Page ───────────────────────────────────────────────────────────
     "block.title": "Seite gesperrt",
@@ -186,6 +199,7 @@ export const translations = {
     "settings.pinWrong": "Falsche aktuelle PIN.",
     "settings.pinSaved": "PIN gespeichert.",
     "settings.pinRemoved": "PIN entfernt.",
+    "settings.challengeLabel": "Tipp-Challenge zum Deaktivieren verlangen",
     "settings.sectionLanguage": "Sprache",
     "settings.langEN": "English",
     "settings.langDE": "Deutsch",
