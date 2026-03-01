@@ -67,6 +67,11 @@ function applyTranslations() {
   document.getElementById("label-yt-hide-sidebar").textContent = tr("settings.ytHideSidebar");
   document.getElementById("label-yt-hide-comments").textContent = tr("settings.ytHideComments");
   document.getElementById("label-yt-hide-thumbnails").textContent = tr("settings.ytHideThumbnails");
+  document.getElementById("heading-twitter").textContent = tr("settings.sectionTwitter");
+  document.getElementById("label-tw-hide-feed").textContent = tr("settings.twHideFeed");
+  document.getElementById("label-tw-hide-trending").textContent = tr("settings.twHideTrending");
+  document.getElementById("label-tw-hide-who-to-follow").textContent = tr("settings.twHideWhoToFollow");
+  document.getElementById("label-tw-hide-notif-badge").textContent = tr("settings.twHideNotifBadge");
   document.getElementById("heading-reminder").textContent = tr("settings.sectionReminder");
   document.getElementById("task-reminder").placeholder = tr("settings.reminderPlaceholder");
   document.getElementById("heading-stats").textContent = tr("settings.sectionStats");
@@ -191,6 +196,13 @@ async function populateForm() {
   document.getElementById("yt-hide-sidebar").checked    = yf.hideSidebar   ?? false;
   document.getElementById("yt-hide-comments").checked   = yf.hideComments  ?? false;
   document.getElementById("yt-hide-thumbnails").checked = yf.hideThumbnails ?? false;
+
+  // Twitter/X filters
+  const tf = settings.twitterFilter ?? {};
+  document.getElementById("tw-hide-feed").checked          = tf.hideFeed         ?? false;
+  document.getElementById("tw-hide-trending").checked      = tf.hideTrending      ?? false;
+  document.getElementById("tw-hide-who-to-follow").checked = tf.hideWhoToFollow   ?? false;
+  document.getElementById("tw-hide-notif-badge").checked   = tf.hideNotifBadge    ?? false;
 
   // Task reminder
   document.getElementById("task-reminder").value = settings.taskReminder ?? "";
@@ -392,6 +404,17 @@ function wireEvents() {
   ]) {
     document.getElementById(id).addEventListener("change", async (e) => {
       await saveSettings({ youtubeFilter: { [key]: e.target.checked } });
+    });
+  }
+
+  for (const [id, key] of [
+    ["tw-hide-feed",          "hideFeed"],
+    ["tw-hide-trending",      "hideTrending"],
+    ["tw-hide-who-to-follow", "hideWhoToFollow"],
+    ["tw-hide-notif-badge",   "hideNotifBadge"],
+  ]) {
+    document.getElementById(id).addEventListener("change", async (e) => {
+      await saveSettings({ twitterFilter: { [key]: e.target.checked } });
     });
   }
 

@@ -43,6 +43,11 @@
       "matches": ["https://www.youtube.com/*"],
       "js": ["src/content/youtube-filter.js"],
       "run_at": "document_end"
+    },
+    {
+      "matches": ["https://twitter.com/*", "https://x.com/*"],
+      "js": ["src/content/twitter-filter.js"],
+      "run_at": "document_end"
     }
   ]
 }

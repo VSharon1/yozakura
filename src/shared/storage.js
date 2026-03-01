@@ -76,6 +76,12 @@ const DEFAULT_STATE = {
       hideSidebar: false,
       hideComments: false,
       hideThumbnails: false,
+    },
+    twitterFilter: {
+      hideFeed: false,
+      hideTrending: false,
+      hideWhoToFollow: false,
+      hideNotifBadge: false,
     }
   },
   stats: {}
@@ -106,6 +112,9 @@ async function _readAll() {
       );
       merged.settings.youtubeFilter = Object.assign(
         {}, DEFAULT_STATE.settings.youtubeFilter, merged.settings.youtubeFilter
+      );
+      merged.settings.twitterFilter = Object.assign(
+        {}, DEFAULT_STATE.settings.twitterFilter, merged.settings.twitterFilter
       );
       resolve(merged);
     });
@@ -149,6 +158,9 @@ export async function saveSettings(partial) {
   }
   if (partial.youtubeFilter) {
     updated.youtubeFilter = Object.assign({}, all.settings.youtubeFilter, partial.youtubeFilter);
+  }
+  if (partial.twitterFilter) {
+    updated.twitterFilter = Object.assign({}, all.settings.twitterFilter, partial.twitterFilter);
   }
   await _write({ settings: updated });
 }
