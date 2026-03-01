@@ -22,7 +22,8 @@ import {
   setAllowanceSession,
   clearAllowanceSession,
   recordAllowanceUsage,
-  initDefaults
+  initDefaults,
+  normaliseDomain
 } from "../shared/storage.js";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -46,7 +47,24 @@ chrome.runtime.onInstalled.addListener(async () => {
   await updateDNRRules();
   // Create the recurring schedule-check alarm (every 1 minute)
   chrome.alarms.create(ALARM_SCHEDULE_CHECK, { periodInMinutes: 1 });
+  // Create context menu item for quick-blocking
+  chrome.contextMenus.create({
+    id: "yozakura-block-site",
+    title: "Block this site with Yozakura",
+    contexts: ["page"]
+  });
   console.log("[Yozakura] Installed and initialised.");
+});
+
+// ─── Context menu ─────────────────────────────────────────────────────────────
+
+chrome.contextMenus.onClicked.addListener(async (info) => {
+  if (info.menuItemId !== "yozakura-block-site") return;
+  const domain = normaliseDomain(info.pageUrl);
+  if (!domain || !domain.includes(".")) return;
+  await addSite(domain);
+  await updateDNRRules();
+  console.log(`[Yozakura] Context-menu: blocked ${domain}`);
 });
 
 /** On service worker start, restore any running alarms from persisted state. */
