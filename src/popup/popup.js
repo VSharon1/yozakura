@@ -241,7 +241,11 @@ function handleRemoveSite(domain, settings) {
 }
 
 async function performRemoveSite(domain) {
-  await sendMsg({ type: "REMOVE_SITE", domain });
+  const result = await sendMsg({ type: "REMOVE_SITE", domain });
+  if (result?.error === "locked") {
+    showAddMsg(tr("popup.lockError"), true);
+    return;
+  }
   refresh();
 }
 
@@ -407,12 +411,21 @@ document.getElementById("manual-toggle").addEventListener("change", async (e) =>
   if (!e.target.checked && state?.settings?.challengeEnabled) {
     e.target.checked = true; // revert visually until confirmed
     openChallengeModal(async () => {
-      await sendMsg({ type: "SET_MANUAL", active: false });
+      const result = await sendMsg({ type: "SET_MANUAL", active: false });
+      if (result?.error === "locked") {
+        showAddMsg(tr("popup.lockError"), true);
+        return;
+      }
       refresh();
     });
     return;
   }
-  await sendMsg({ type: "SET_MANUAL", active: e.target.checked });
+  const result = await sendMsg({ type: "SET_MANUAL", active: e.target.checked });
+  if (result?.error === "locked") {
+    e.target.checked = !e.target.checked; // revert
+    showAddMsg(tr("popup.lockError"), true);
+    return;
+  }
   refresh();
 });
 
@@ -546,6 +559,19 @@ async function refresh() {
   renderSitesList(blocklist, settings);
   renderAllowlist(allowlist ?? []);
   updateControlsVisibility(settings, active);
+
+  // Lock badge
+  const lockBadge = document.getElementById("lock-badge");
+  if (settings.lockedUntil && Date.now() < settings.lockedUntil) {
+    const remaining = settings.lockedUntil - Date.now();
+    const h = Math.floor(remaining / 3_600_000);
+    const m = Math.floor((remaining % 3_600_000) / 60_000);
+    document.getElementById("lock-badge-text").textContent =
+      `🔒 ${tr("popup.lockActive")} (${h}h ${m}m)`;
+    lockBadge.style.display = "";
+  } else {
+    lockBadge.style.display = "none";
+  }
 }
 
 // ─── Init ─────────────────────────────────────────────────────────────────────

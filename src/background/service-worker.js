@@ -384,6 +384,17 @@ export async function startDuration(minutes) {
   console.log(`[Yozakura] Duration block started for ${minutes} min.`);
 }
 
+// ─── Nuclear lock ─────────────────────────────────────────────────────────────
+
+/**
+ * Returns true if settings are currently locked (lockedUntil is in the future).
+ * @param {object} settings
+ * @returns {boolean}
+ */
+function isLocked(settings) {
+  return !!(settings.lockedUntil && Date.now() < settings.lockedUntil);
+}
+
 // ─── Public message API ───────────────────────────────────────────────────────
 // The popup and settings pages communicate with the service worker via
 // chrome.runtime.sendMessage / onMessage.
@@ -405,6 +416,8 @@ async function handleMessage(msg) {
       return { ok: true };
     }
     case "REMOVE_SITE": {
+      const s1 = await getSettings();
+      if (isLocked(s1)) return { ok: false, error: "locked" };
       await removeSite(msg.domain);
       await updateDNRRules();
       return { ok: true };
@@ -415,6 +428,8 @@ async function handleMessage(msg) {
       return { ok: true };
     }
     case "REMOVE_ALLOWSITE": {
+      const s2 = await getSettings();
+      if (isLocked(s2)) return { ok: false, error: "locked" };
       await removeAllowSite(msg.domain);
       await updateDNRRules();
       return { ok: true };
@@ -431,6 +446,10 @@ async function handleMessage(msg) {
       return { ok: true };
     }
     case "SET_ALLOWLIST": {
+      if (!msg.active) {
+        const s3 = await getSettings();
+        if (isLocked(s3)) return { ok: false, error: "locked" };
+      }
       if (msg.active) {
         await saveSettings({ mode: "allowlist" });
       } else {
@@ -440,6 +459,10 @@ async function handleMessage(msg) {
       return { ok: true };
     }
     case "SET_MANUAL": {
+      if (msg.active === false) {
+        const s4 = await getSettings();
+        if (isLocked(s4)) return { ok: false, error: "locked" };
+      }
       await saveSettings({ mode: "manual", manualActive: msg.active });
       await updateDNRRules();
       return { ok: true };
@@ -453,7 +476,13 @@ async function handleMessage(msg) {
       return { ok: true };
     }
     case "STOP_POMODORO": {
+      const s5 = await getSettings();
+      if (isLocked(s5)) return { ok: false, error: "locked" };
       await stopPomodoro();
+      return { ok: true };
+    }
+    case "SET_LOCK": {
+      await saveSettings({ lockedUntil: msg.until });
       return { ok: true };
     }
     case "UPDATE_RULES": {

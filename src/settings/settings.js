@@ -56,6 +56,10 @@ function applyTranslations() {
   document.getElementById("heading-schedule").textContent = tr("settings.sectionSchedule");
   document.getElementById("add-schedule").textContent = tr("settings.scheduleAdd");
   document.getElementById("schedules-limit-note").textContent = tr("settings.scheduleLimit");
+  document.getElementById("heading-lock").textContent = tr("settings.sectionLock");
+  document.getElementById("label-lock-desc").textContent = tr("settings.lockDesc");
+  document.getElementById("label-lock-hours").textContent = tr("settings.lockFor");
+  document.getElementById("lock-activate").textContent = tr("settings.lockActivate");
   document.getElementById("heading-pomodoro").textContent = tr("settings.sectionPomodoro");
   document.getElementById("label-pom-work").textContent = tr("settings.pomodoroWork");
   document.getElementById("label-pom-break").textContent = tr("settings.pomodoroBreak");
@@ -324,6 +328,34 @@ async function handleRemovePin() {
   showPinMsg(tr("settings.pinRemoved"));
 }
 
+// ─── Lock state rendering ─────────────────────────────────────────────────────
+
+function renderLockState(settings) {
+  const unlockedView = document.getElementById("lock-unlocked-view");
+  const activeView = document.getElementById("lock-active-view");
+  const activeMsg = document.getElementById("lock-active-msg");
+  const page = document.querySelector(".page");
+
+  if (settings.lockedUntil && Date.now() < settings.lockedUntil) {
+    const remaining = settings.lockedUntil - Date.now();
+    const h = Math.floor(remaining / 3_600_000);
+    const m = Math.floor((remaining % 3_600_000) / 60_000);
+    const lockedUntilDate = new Date(settings.lockedUntil);
+    const timeStr = lockedUntilDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    activeMsg.textContent = `${tr("settings.lockUntil")} ${timeStr} (${h}h ${m}m remaining)`;
+    unlockedView.style.display = "none";
+    activeView.style.display = "";
+    page.classList.add("form-locked");
+    // Hide save bar button too
+    document.getElementById("save-btn").disabled = true;
+  } else {
+    unlockedView.style.display = "";
+    activeView.style.display = "none";
+    page.classList.remove("form-locked");
+    document.getElementById("save-btn").disabled = false;
+  }
+}
+
 // ─── Populate form from settings ──────────────────────────────────────────────
 
 async function populateForm() {
@@ -388,6 +420,9 @@ async function populateForm() {
 
   // Task reminder
   document.getElementById("task-reminder").value = settings.taskReminder ?? "";
+
+  // Lock state
+  renderLockState(settings);
 }
 
 // ─── Collect & save all settings ─────────────────────────────────────────────
@@ -632,6 +667,16 @@ function wireEvents() {
       await saveSettings({ linkedinFilter: { [key]: e.target.checked } });
     });
   }
+
+  document.getElementById("lock-activate").addEventListener("click", async () => {
+    const hours = parseInt(document.getElementById("lock-hours").value, 10);
+    if (!hours || hours < 1) return;
+    const confirmed = confirm(`Lock settings for ${hours} hour(s)? This cannot be undone.`);
+    if (!confirmed) return;
+    const until = Date.now() + hours * 3_600_000;
+    await chrome.runtime.sendMessage({ type: "SET_LOCK", until });
+    renderLockState({ lockedUntil: until });
+  });
 
   setupKeyToggle();
 

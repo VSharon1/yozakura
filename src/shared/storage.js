@@ -55,6 +55,7 @@ const DEFAULT_STATE = {
       to: "17:00"
     },
     schedules: [],  // array of { id, name, enabled, from, to, days }
+    lockedUntil: null,  // Unix ms or null
     pomodoro: {
       workMinutes: 50,
       breakMinutes: 10

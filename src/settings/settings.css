@@ -540,6 +540,43 @@ body {
   background: var(--accent);
 }
 
+/* ── Nuclear lock ───────────────────────────────────────────────────────── */
+
+.lock-active-msg {
+  padding: 12px 16px;
+  background: #f7768e15;
+  border: 1px solid #f7768e40;
+  border-radius: var(--radius);
+  color: var(--red);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* When settings are locked, dim and disable all interactive elements */
+.form-locked input,
+.form-locked select,
+.form-locked textarea,
+.form-locked button {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+/* But keep the lock section itself readable (it just shows the countdown) */
+.form-locked #section-lock {
+  opacity: 1;
+}
+
+.form-locked #section-lock input,
+.form-locked #section-lock select,
+.form-locked #section-lock textarea,
+.form-locked #section-lock button {
+  opacity: 1;
+  pointer-events: auto;
+  cursor: default;
+}
+
 /* ── Incognito note ──────────────────────────────────────────────────────── */
 
 .incognito-note {

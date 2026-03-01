@@ -83,6 +83,18 @@ body {
   border-color: var(--accent);
 }
 
+/* ── Lock badge ─────────────────────────────────────────────────────────── */
+
+.lock-badge {
+  padding: 4px 16px;
+  background: #f7768e15;
+  border-bottom: 1px solid #f7768e40;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--red, #f7768e);
+  letter-spacing: 0.5px;
+}
+
 /* ── Mode badge ─────────────────────────────────────────────────────────── */
 
 .mode-badge {

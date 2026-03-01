@@ -293,7 +293,30 @@
       <p class="stats-empty" id="stats-empty" hidden></p>
     </section>
 
-    <!-- ── 10. Data ────────────────────────────────────────────────── -->
+    <!-- ── 10. Nuclear Lock ────────────────────────────────────── -->
+    <section class="section" id="section-lock">
+      <h2 class="section__heading" id="heading-lock">Nuclear Lock</h2>
+      <div id="lock-unlocked-view">
+        <p class="field__note" id="label-lock-desc">
+          Lock all settings and site removals for a set duration. Cannot be undone early.
+        </p>
+        <div class="field field--row" style="margin-top:12px;align-items:flex-end">
+          <div class="field__sub">
+            <label class="field__label" id="label-lock-hours" for="lock-hours">
+              Lock for (hours)
+            </label>
+            <input class="field__input field__input--number" id="lock-hours"
+                   type="number" min="1" max="72" value="1" />
+          </div>
+          <button class="btn btn--danger" id="lock-activate" type="button">Activate Lock</button>
+        </div>
+      </div>
+      <div id="lock-active-view" style="display:none">
+        <p class="lock-active-msg" id="lock-active-msg"></p>
+      </div>
+    </section>
+
+    <!-- ── 11. Data ────────────────────────────────────────────────── -->
     <section class="section" id="section-data">
       <h2 class="section__heading" id="heading-data">Data</h2>
       <div class="btn-row btn-row--wrap">
