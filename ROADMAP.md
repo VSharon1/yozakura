@@ -40,12 +40,12 @@ Extend the YouTube content-script model to other major platforms. Pure content s
 
 Closes the gap vs. LeechBlock / StayFocusd.
 
-- [ ] Subdomain & path blocking — allow `reddit.com/r/programming` while blocking `reddit.com/r/gaming`; DNR `urlFilter` already supports path patterns, just expose it in UI
-- [ ] Wildcard patterns — `*.reddit.com`, `reddit.*` — LeechBlock-style
-- [ ] Multiple schedule slots — up to 5 named schedules, each with own time range + days-of-week selector
-- [ ] Nuclear option — "Lock" toggle: once enabled, settings page is inaccessible and blocking can't be disabled until the configured end time; backed by `lockedUntil` timestamp
-- [ ] Incognito support — add `"incognito": "spanning"` to manifest + instruct user on enabling it in `chrome://extensions/`
-- [ ] Context-menu quick-add — `chrome.contextMenus` API: right-click any page → "Block this site with Yozakura"
+- ✅ Subdomain & path blocking — allow `reddit.com/r/programming` while blocking `reddit.com/r/gaming`; DNR `urlFilter` already supports path patterns, just expose it in UI
+- ✅ Wildcard patterns — `*.reddit.com`, `reddit.*` — LeechBlock-style
+- ✅ Multiple schedule slots — up to 5 named schedules, each with own time range + days-of-week selector
+- ✅ Nuclear option — "Lock" toggle: once enabled, settings page is inaccessible and blocking can't be disabled until the configured end time; backed by `lockedUntil` timestamp
+- ✅ Incognito support — add `"incognito": "spanning"` to manifest + instruct user on enabling it in `chrome://extensions/`
+- ✅ Context-menu quick-add — `chrome.contextMenus` API: right-click any page → "Block this site with Yozakura"
 
 ---
 
