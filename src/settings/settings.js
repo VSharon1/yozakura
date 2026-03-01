@@ -77,6 +77,11 @@ function applyTranslations() {
   document.getElementById("label-rd-hide-promoted").textContent = tr("settings.rdHidePromoted");
   document.getElementById("label-rd-hide-nsfw").textContent = tr("settings.rdHideNsfw");
   document.getElementById("label-rd-hide-awards").textContent = tr("settings.rdHideAwards");
+  document.getElementById("heading-instagram").textContent = tr("settings.sectionInstagram");
+  document.getElementById("label-ig-hide-feed").textContent = tr("settings.igHideFeed");
+  document.getElementById("label-ig-hide-explore").textContent = tr("settings.igHideExplore");
+  document.getElementById("label-ig-hide-reels").textContent = tr("settings.igHideReels");
+  document.getElementById("label-ig-hide-suggested").textContent = tr("settings.igHideSuggested");
   document.getElementById("heading-reminder").textContent = tr("settings.sectionReminder");
   document.getElementById("task-reminder").placeholder = tr("settings.reminderPlaceholder");
   document.getElementById("heading-stats").textContent = tr("settings.sectionStats");
@@ -215,6 +220,13 @@ async function populateForm() {
   document.getElementById("rd-hide-promoted").checked = rf.hidePromoted ?? false;
   document.getElementById("rd-hide-nsfw").checked     = rf.hideNsfw     ?? false;
   document.getElementById("rd-hide-awards").checked   = rf.hideAwards   ?? false;
+
+  // Instagram filters
+  const igf = settings.instagramFilter ?? {};
+  document.getElementById("ig-hide-feed").checked      = igf.hideFeed      ?? false;
+  document.getElementById("ig-hide-explore").checked   = igf.hideExplore   ?? false;
+  document.getElementById("ig-hide-reels").checked     = igf.hideReels     ?? false;
+  document.getElementById("ig-hide-suggested").checked = igf.hideSuggested ?? false;
 
   // Task reminder
   document.getElementById("task-reminder").value = settings.taskReminder ?? "";
@@ -438,6 +450,17 @@ function wireEvents() {
   ]) {
     document.getElementById(id).addEventListener("change", async (e) => {
       await saveSettings({ redditFilter: { [key]: e.target.checked } });
+    });
+  }
+
+  for (const [id, key] of [
+    ["ig-hide-feed",      "hideFeed"],
+    ["ig-hide-explore",   "hideExplore"],
+    ["ig-hide-reels",     "hideReels"],
+    ["ig-hide-suggested", "hideSuggested"],
+  ]) {
+    document.getElementById(id).addEventListener("change", async (e) => {
+      await saveSettings({ instagramFilter: { [key]: e.target.checked } });
     });
   }
 

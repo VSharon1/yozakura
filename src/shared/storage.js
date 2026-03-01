@@ -88,6 +88,12 @@ const DEFAULT_STATE = {
       hidePromoted: false,
       hideNsfw: false,
       hideAwards: false,
+    },
+    instagramFilter: {
+      hideFeed: false,
+      hideExplore: false,
+      hideReels: false,
+      hideSuggested: false,
     }
   },
   stats: {}
@@ -124,6 +130,9 @@ async function _readAll() {
       );
       merged.settings.redditFilter = Object.assign(
         {}, DEFAULT_STATE.settings.redditFilter, merged.settings.redditFilter
+      );
+      merged.settings.instagramFilter = Object.assign(
+        {}, DEFAULT_STATE.settings.instagramFilter, merged.settings.instagramFilter
       );
       resolve(merged);
     });
@@ -173,6 +182,9 @@ export async function saveSettings(partial) {
   }
   if (partial.redditFilter) {
     updated.redditFilter = Object.assign({}, all.settings.redditFilter, partial.redditFilter);
+  }
+  if (partial.instagramFilter) {
+    updated.instagramFilter = Object.assign({}, all.settings.instagramFilter, partial.instagramFilter);
   }
   await _write({ settings: updated });
 }
