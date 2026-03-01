@@ -168,157 +168,123 @@
       </div>
     </section>
 
-    <!-- ── 7. YouTube Filters ─────────────────────────────────────── -->
-    <section class="section" id="section-youtube">
-      <h2 class="section__heading" id="heading-youtube">YouTube Filters</h2>
+    <!-- ── 7. Content Filters ────────────────────────────────────────── -->
+    <section class="section" id="section-content-filters">
+      <h2 class="section__heading" id="heading-content-filters">Content Filters</h2>
 
-      <div class="field field--inline">
-        <input type="checkbox" class="checkbox-input" id="yt-hide-shorts" />
-        <label class="field__label" id="label-yt-hide-shorts" for="yt-hide-shorts">
-          Hide Shorts shelf
-        </label>
-      </div>
-      <div class="field field--inline">
-        <input type="checkbox" class="checkbox-input" id="yt-hide-sidebar" />
-        <label class="field__label" id="label-yt-hide-sidebar" for="yt-hide-sidebar">
-          Hide recommendations sidebar
-        </label>
-      </div>
-      <div class="field field--inline">
-        <input type="checkbox" class="checkbox-input" id="yt-hide-comments" />
-        <label class="field__label" id="label-yt-hide-comments" for="yt-hide-comments">
-          Hide comments
-        </label>
-      </div>
-      <div class="field field--inline">
-        <input type="checkbox" class="checkbox-input" id="yt-hide-thumbnails" />
-        <label class="field__label" id="label-yt-hide-thumbnails" for="yt-hide-thumbnails">
-          Hide video thumbnails
-        </label>
-      </div>
+      <details class="filter-group" id="filter-group-youtube">
+        <summary class="filter-group__summary" id="summary-youtube">YouTube Filters</summary>
+        <div class="filter-group__body">
+          <div class="field field--inline">
+            <input type="checkbox" class="checkbox-input" id="yt-hide-shorts" />
+            <label class="field__label" id="label-yt-hide-shorts" for="yt-hide-shorts">Hide Shorts shelf</label>
+          </div>
+          <div class="field field--inline">
+            <input type="checkbox" class="checkbox-input" id="yt-hide-sidebar" />
+            <label class="field__label" id="label-yt-hide-sidebar" for="yt-hide-sidebar">Hide recommendations sidebar</label>
+          </div>
+          <div class="field field--inline">
+            <input type="checkbox" class="checkbox-input" id="yt-hide-comments" />
+            <label class="field__label" id="label-yt-hide-comments" for="yt-hide-comments">Hide comments</label>
+          </div>
+          <div class="field field--inline">
+            <input type="checkbox" class="checkbox-input" id="yt-hide-thumbnails" />
+            <label class="field__label" id="label-yt-hide-thumbnails" for="yt-hide-thumbnails">Hide video thumbnails</label>
+          </div>
+        </div>
+      </details>
+
+      <details class="filter-group" id="filter-group-twitter">
+        <summary class="filter-group__summary" id="summary-twitter">Twitter / X Filters</summary>
+        <div class="filter-group__body">
+          <div class="field field--inline">
+            <input type="checkbox" class="checkbox-input" id="tw-hide-feed" />
+            <label class="field__label" id="label-tw-hide-feed" for="tw-hide-feed">Hide timeline feed</label>
+          </div>
+          <div class="field field--inline">
+            <input type="checkbox" class="checkbox-input" id="tw-hide-trending" />
+            <label class="field__label" id="label-tw-hide-trending" for="tw-hide-trending">Hide trending topics</label>
+          </div>
+          <div class="field field--inline">
+            <input type="checkbox" class="checkbox-input" id="tw-hide-who-to-follow" />
+            <label class="field__label" id="label-tw-hide-who-to-follow" for="tw-hide-who-to-follow">Hide "Who to follow"</label>
+          </div>
+          <div class="field field--inline">
+            <input type="checkbox" class="checkbox-input" id="tw-hide-notif-badge" />
+            <label class="field__label" id="label-tw-hide-notif-badge" for="tw-hide-notif-badge">Hide notifications badge</label>
+          </div>
+        </div>
+      </details>
+
+      <details class="filter-group" id="filter-group-reddit">
+        <summary class="filter-group__summary" id="summary-reddit">Reddit Filters</summary>
+        <div class="filter-group__body">
+          <div class="field field--inline">
+            <input type="checkbox" class="checkbox-input" id="rd-hide-feed" />
+            <label class="field__label" id="label-rd-hide-feed" for="rd-hide-feed">Hide post feed</label>
+          </div>
+          <div class="field field--inline">
+            <input type="checkbox" class="checkbox-input" id="rd-hide-promoted" />
+            <label class="field__label" id="label-rd-hide-promoted" for="rd-hide-promoted">Hide promoted posts</label>
+          </div>
+          <div class="field field--inline">
+            <input type="checkbox" class="checkbox-input" id="rd-hide-nsfw" />
+            <label class="field__label" id="label-rd-hide-nsfw" for="rd-hide-nsfw">Hide NSFW posts</label>
+          </div>
+          <div class="field field--inline">
+            <input type="checkbox" class="checkbox-input" id="rd-hide-awards" />
+            <label class="field__label" id="label-rd-hide-awards" for="rd-hide-awards">Hide awards</label>
+          </div>
+        </div>
+      </details>
+
+      <details class="filter-group" id="filter-group-instagram">
+        <summary class="filter-group__summary" id="summary-instagram">Instagram Filters</summary>
+        <div class="filter-group__body">
+          <div class="field field--inline">
+            <input type="checkbox" class="checkbox-input" id="ig-hide-feed" />
+            <label class="field__label" id="label-ig-hide-feed" for="ig-hide-feed">Hide post feed</label>
+          </div>
+          <div class="field field--inline">
+            <input type="checkbox" class="checkbox-input" id="ig-hide-explore" />
+            <label class="field__label" id="label-ig-hide-explore" for="ig-hide-explore">Hide Explore tab</label>
+          </div>
+          <div class="field field--inline">
+            <input type="checkbox" class="checkbox-input" id="ig-hide-reels" />
+            <label class="field__label" id="label-ig-hide-reels" for="ig-hide-reels">Hide Reels tab</label>
+          </div>
+          <div class="field field--inline">
+            <input type="checkbox" class="checkbox-input" id="ig-hide-suggested" />
+            <label class="field__label" id="label-ig-hide-suggested" for="ig-hide-suggested">Hide suggested people</label>
+          </div>
+        </div>
+      </details>
+
+      <details class="filter-group" id="filter-group-linkedin">
+        <summary class="filter-group__summary" id="summary-linkedin">LinkedIn Filters</summary>
+        <div class="filter-group__body">
+          <div class="field field--inline">
+            <input type="checkbox" class="checkbox-input" id="li-hide-feed" />
+            <label class="field__label" id="label-li-hide-feed" for="li-hide-feed">Hide feed</label>
+          </div>
+          <div class="field field--inline">
+            <input type="checkbox" class="checkbox-input" id="li-hide-pymk" />
+            <label class="field__label" id="label-li-hide-pymk" for="li-hide-pymk">Hide "People you may know"</label>
+          </div>
+          <div class="field field--inline">
+            <input type="checkbox" class="checkbox-input" id="li-hide-news" />
+            <label class="field__label" id="label-li-hide-news" for="li-hide-news">Hide news module</label>
+          </div>
+          <div class="field field--inline">
+            <input type="checkbox" class="checkbox-input" id="li-hide-promoted" />
+            <label class="field__label" id="label-li-hide-promoted" for="li-hide-promoted">Hide promoted posts</label>
+          </div>
+        </div>
+      </details>
+
     </section>
 
-    <!-- ── 8. Twitter/X Filters ──────────────────────────────────────── -->
-    <section class="section" id="section-twitter">
-      <h2 class="section__heading" id="heading-twitter">Twitter / X Filters</h2>
-
-      <div class="field field--inline">
-        <input type="checkbox" class="checkbox-input" id="tw-hide-feed" />
-        <label class="field__label" id="label-tw-hide-feed" for="tw-hide-feed">
-          Hide timeline feed
-        </label>
-      </div>
-      <div class="field field--inline">
-        <input type="checkbox" class="checkbox-input" id="tw-hide-trending" />
-        <label class="field__label" id="label-tw-hide-trending" for="tw-hide-trending">
-          Hide trending topics
-        </label>
-      </div>
-      <div class="field field--inline">
-        <input type="checkbox" class="checkbox-input" id="tw-hide-who-to-follow" />
-        <label class="field__label" id="label-tw-hide-who-to-follow" for="tw-hide-who-to-follow">
-          Hide "Who to follow"
-        </label>
-      </div>
-      <div class="field field--inline">
-        <input type="checkbox" class="checkbox-input" id="tw-hide-notif-badge" />
-        <label class="field__label" id="label-tw-hide-notif-badge" for="tw-hide-notif-badge">
-          Hide notifications badge
-        </label>
-      </div>
-    </section>
-
-    <!-- ── 9. Reddit Filters ──────────────────────────────────────── -->
-    <section class="section" id="section-reddit">
-      <h2 class="section__heading" id="heading-reddit">Reddit Filters</h2>
-
-      <div class="field field--inline">
-        <input type="checkbox" class="checkbox-input" id="rd-hide-feed" />
-        <label class="field__label" id="label-rd-hide-feed" for="rd-hide-feed">
-          Hide post feed
-        </label>
-      </div>
-      <div class="field field--inline">
-        <input type="checkbox" class="checkbox-input" id="rd-hide-promoted" />
-        <label class="field__label" id="label-rd-hide-promoted" for="rd-hide-promoted">
-          Hide promoted posts
-        </label>
-      </div>
-      <div class="field field--inline">
-        <input type="checkbox" class="checkbox-input" id="rd-hide-nsfw" />
-        <label class="field__label" id="label-rd-hide-nsfw" for="rd-hide-nsfw">
-          Hide NSFW posts
-        </label>
-      </div>
-      <div class="field field--inline">
-        <input type="checkbox" class="checkbox-input" id="rd-hide-awards" />
-        <label class="field__label" id="label-rd-hide-awards" for="rd-hide-awards">
-          Hide awards
-        </label>
-      </div>
-    </section>
-
-    <!-- ── 10. Instagram Filters ─────────────────────────────────────── -->
-    <section class="section" id="section-instagram">
-      <h2 class="section__heading" id="heading-instagram">Instagram Filters</h2>
-
-      <div class="field field--inline">
-        <input type="checkbox" class="checkbox-input" id="ig-hide-feed" />
-        <label class="field__label" id="label-ig-hide-feed" for="ig-hide-feed">
-          Hide post feed
-        </label>
-      </div>
-      <div class="field field--inline">
-        <input type="checkbox" class="checkbox-input" id="ig-hide-explore" />
-        <label class="field__label" id="label-ig-hide-explore" for="ig-hide-explore">
-          Hide Explore tab
-        </label>
-      </div>
-      <div class="field field--inline">
-        <input type="checkbox" class="checkbox-input" id="ig-hide-reels" />
-        <label class="field__label" id="label-ig-hide-reels" for="ig-hide-reels">
-          Hide Reels tab
-        </label>
-      </div>
-      <div class="field field--inline">
-        <input type="checkbox" class="checkbox-input" id="ig-hide-suggested" />
-        <label class="field__label" id="label-ig-hide-suggested" for="ig-hide-suggested">
-          Hide suggested people
-        </label>
-      </div>
-    </section>
-
-    <!-- ── 11. LinkedIn Filters ──────────────────────────────────────── -->
-    <section class="section" id="section-linkedin">
-      <h2 class="section__heading" id="heading-linkedin">LinkedIn Filters</h2>
-
-      <div class="field field--inline">
-        <input type="checkbox" class="checkbox-input" id="li-hide-feed" />
-        <label class="field__label" id="label-li-hide-feed" for="li-hide-feed">
-          Hide feed
-        </label>
-      </div>
-      <div class="field field--inline">
-        <input type="checkbox" class="checkbox-input" id="li-hide-pymk" />
-        <label class="field__label" id="label-li-hide-pymk" for="li-hide-pymk">
-          Hide "People you may know"
-        </label>
-      </div>
-      <div class="field field--inline">
-        <input type="checkbox" class="checkbox-input" id="li-hide-news" />
-        <label class="field__label" id="label-li-hide-news" for="li-hide-news">
-          Hide news module
-        </label>
-      </div>
-      <div class="field field--inline">
-        <input type="checkbox" class="checkbox-input" id="li-hide-promoted" />
-        <label class="field__label" id="label-li-hide-promoted" for="li-hide-promoted">
-          Hide promoted posts
-        </label>
-      </div>
-    </section>
-
-    <!-- ── 12. Task Reminder ───────────────────────────────────────── -->
+    <!-- ── 8. Task Reminder ────────────────────────────────────────── -->
     <section class="section" id="section-reminder">
       <h2 class="section__heading" id="heading-reminder">Task Reminder</h2>
       <div class="field">
