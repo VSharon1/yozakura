@@ -54,6 +54,7 @@ const DEFAULT_STATE = {
       from: "09:00",
       to: "17:00"
     },
+    schedules: [],  // array of { id, name, enabled, from, to, days }
     pomodoro: {
       workMinutes: 50,
       breakMinutes: 10
@@ -143,6 +144,22 @@ async function _readAll() {
       merged.settings.linkedinFilter = Object.assign(
         {}, DEFAULT_STATE.settings.linkedinFilter, merged.settings.linkedinFilter
       );
+      // Migrate old single schedule to schedules array (runs once for existing users)
+      if (!merged.settings.schedules || !merged.settings.schedules.length) {
+        const old = merged.settings.schedule;
+        if (old.enabled || old.from !== "09:00" || old.to !== "17:00") {
+          merged.settings.schedules = [{
+            id: "sched-migrated",
+            name: "Schedule 1",
+            enabled: old.enabled,
+            from: old.from,
+            to: old.to,
+            days: []
+          }];
+        } else {
+          merged.settings.schedules = [];
+        }
+      }
       resolve(merged);
     });
   });
@@ -197,6 +214,9 @@ export async function saveSettings(partial) {
   }
   if (partial.linkedinFilter) {
     updated.linkedinFilter = Object.assign({}, all.settings.linkedinFilter, partial.linkedinFilter);
+  }
+  if (partial.schedules !== undefined) {
+    updated.schedules = partial.schedules;  // full array replace
   }
   await _write({ settings: updated });
 }

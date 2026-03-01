@@ -114,28 +114,11 @@
     <!-- ── 4. Schedule ─────────────────────────────────────────────── -->
     <section class="section" id="section-schedule">
       <h2 class="section__heading" id="heading-schedule">Schedule</h2>
-
-      <div class="field field--inline">
-        <input type="checkbox" class="checkbox-input" id="schedule-enable" />
-        <label class="field__label" id="label-schedule-enable" for="schedule-enable">
-          Enable schedule blocking
-        </label>
-      </div>
-
-      <div class="field field--row" id="schedule-time-row">
-        <div class="field__sub">
-          <label class="field__label" id="label-schedule-from" for="schedule-from">
-            Block from
-          </label>
-          <input class="field__input field__input--time" id="schedule-from"
-                 type="time" value="09:00" />
-        </div>
-        <div class="field__sub">
-          <label class="field__label" id="label-schedule-to" for="schedule-to">until</label>
-          <input class="field__input field__input--time" id="schedule-to"
-                 type="time" value="17:00" />
-        </div>
-      </div>
+      <div id="schedules-list"></div>
+      <button class="btn btn--outline" id="add-schedule" type="button">+ Add Schedule</button>
+      <p class="field__note" id="schedules-limit-note" style="display:none">
+        Maximum 5 schedules reached.
+      </p>
     </section>
 
     <!-- ── 5. Pomodoro ─────────────────────────────────────────────── -->

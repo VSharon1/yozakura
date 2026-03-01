@@ -138,6 +138,25 @@ async function handleAllowanceExpired(domain) {
   console.log(`[Yozakura] Allowance session expired for ${domain}.`);
 }
 
+// ─── Time helpers ─────────────────────────────────────────────────────────────
+
+/**
+ * Returns true if nowMinutes (hours*60+min) falls within the from–to range.
+ * Handles overnight ranges (e.g. 22:00 → 06:00).
+ * @param {number} nowMinutes
+ * @param {string} from "HH:MM"
+ * @param {string} to   "HH:MM"
+ * @returns {boolean}
+ */
+function isTimeInRange(nowMinutes, from, to) {
+  const [fH, fM] = from.split(":").map(Number);
+  const [tH, tM] = to.split(":").map(Number);
+  const fromMin = fH * 60 + fM;
+  const toMin = tH * 60 + tM;
+  if (fromMin <= toMin) return nowMinutes >= fromMin && nowMinutes < toMin;
+  return nowMinutes >= fromMin || nowMinutes < toMin; // overnight
+}
+
 // ─── Block-active logic ───────────────────────────────────────────────────────
 
 /**
@@ -163,20 +182,16 @@ export async function isBlockingActive(settings) {
     }
 
     case "schedule": {
-      if (!s.schedule.enabled) return false;
+      const schedules = s.schedules ?? [];
+      if (!schedules.length) return false;
       const now = new Date();
-      const [fH, fM] = s.schedule.from.split(":").map(Number);
-      const [tH, tM] = s.schedule.to.split(":").map(Number);
-      const currentMinutes = now.getHours() * 60 + now.getMinutes();
-      const fromMinutes = fH * 60 + fM;
-      const toMinutes = tH * 60 + tM;
-      // Handles both same-day and overnight schedules
-      if (fromMinutes <= toMinutes) {
-        return currentMinutes >= fromMinutes && currentMinutes < toMinutes;
-      } else {
-        // Overnight: e.g. 22:00 → 06:00
-        return currentMinutes >= fromMinutes || currentMinutes < toMinutes;
-      }
+      const nowMin = now.getHours() * 60 + now.getMinutes();
+      const day = now.getDay(); // 0=Sun, 1=Mon, …, 6=Sat
+      return schedules.some(slot => {
+        if (!slot.enabled) return false;
+        if (slot.days && slot.days.length > 0 && !slot.days.includes(day)) return false;
+        return isTimeInRange(nowMin, slot.from, slot.to);
+      });
     }
 
     case "pomodoro":

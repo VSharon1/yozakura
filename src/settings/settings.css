@@ -425,6 +425,121 @@ body {
   margin-top: 8px;
 }
 
+/* ── Field note ─────────────────────────────────────────────────────────── */
+
+.field__note {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+/* ── Schedule slots ──────────────────────────────────────────────────────── */
+
+.schedule-slot {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  background: var(--surface);
+}
+
+.schedule-slot__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.schedule-slot__name {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  padding: 5px 10px;
+  font-size: 13px;
+  outline: none;
+}
+
+.schedule-slot__name:focus {
+  border-color: var(--accent);
+}
+
+.schedule-slot__body {
+  padding: 10px 12px 12px;
+}
+
+.schedule-slot__days {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.schedule-slot__day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.schedule-slot__day input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+/* Toggle switch for schedule slot enabled state */
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  inset: 0;
+  background: var(--border);
+  border-radius: 20px;
+  transition: background 0.2s;
+}
+
+.slider::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: var(--muted);
+  border-radius: 50%;
+  transition: left 0.2s, background 0.2s;
+}
+
+.toggle input:checked + .slider {
+  background: #7dcfff30;
+  border: 1px solid var(--accent);
+}
+
+.toggle input:checked + .slider::after {
+  left: 17px;
+  background: var(--accent);
+}
+
 /* ── Incognito note ──────────────────────────────────────────────────────── */
 
 .incognito-note {

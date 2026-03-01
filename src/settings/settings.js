@@ -54,9 +54,8 @@ function applyTranslations() {
   document.getElementById("opt-tone-stern").textContent = tr("settings.aiToneStern");
   document.getElementById("opt-tone-funny").textContent = tr("settings.aiToneFunny");
   document.getElementById("heading-schedule").textContent = tr("settings.sectionSchedule");
-  document.getElementById("label-schedule-enable").textContent = tr("settings.scheduleEnable");
-  document.getElementById("label-schedule-from").textContent = tr("settings.scheduleFrom");
-  document.getElementById("label-schedule-to").textContent = tr("settings.scheduleTo");
+  document.getElementById("add-schedule").textContent = tr("settings.scheduleAdd");
+  document.getElementById("schedules-limit-note").textContent = tr("settings.scheduleLimit");
   document.getElementById("heading-pomodoro").textContent = tr("settings.sectionPomodoro");
   document.getElementById("label-pom-work").textContent = tr("settings.pomodoroWork");
   document.getElementById("label-pom-break").textContent = tr("settings.pomodoroBreak");
@@ -98,6 +97,154 @@ function applyTranslations() {
   document.getElementById("import-btn").textContent = tr("settings.importBtn");
   document.getElementById("clear-stats-btn").textContent = tr("settings.clearStats");
   document.getElementById("save-btn").textContent = tr("general.save");
+}
+
+// ─── Schedule slots ───────────────────────────────────────────────────────────
+
+// Day labels: Mon=1, Tue=2, Wed=3, Thu=4, Fri=5, Sat=6, Sun=0
+const DAY_KEYS = ["dayMon", "dayTue", "dayWed", "dayThu", "dayFri", "daySat", "daySun"];
+// JS getDay() returns 0=Sun,1=Mon,...,6=Sat; our order is Mon-Sun
+const DAY_VALUES = [1, 2, 3, 4, 5, 6, 0];
+
+function generateSlotId() {
+  return "sched-" + Date.now().toString(36);
+}
+
+// In-memory array of schedule slots (synced to DOM on render)
+let _schedules = [];
+
+function renderSchedules(schedules) {
+  _schedules = schedules.map(s => ({ ...s }));
+  _renderScheduleDOM();
+}
+
+function _renderScheduleDOM() {
+  const container = document.getElementById("schedules-list");
+  container.innerHTML = "";
+
+  for (const slot of _schedules) {
+    const card = document.createElement("div");
+    card.className = "schedule-slot";
+    card.dataset.id = slot.id;
+
+    // Header: name input, enabled toggle, delete button
+    const header = document.createElement("div");
+    header.className = "schedule-slot__header";
+
+    const nameInput = document.createElement("input");
+    nameInput.type = "text";
+    nameInput.className = "schedule-slot__name";
+    nameInput.placeholder = tr("settings.scheduleSlotName");
+    nameInput.value = slot.name ?? "";
+
+    const toggleLabel = document.createElement("label");
+    toggleLabel.className = "toggle";
+    const toggleInput = document.createElement("input");
+    toggleInput.type = "checkbox";
+    toggleInput.className = "schedule-slot__enabled";
+    toggleInput.checked = slot.enabled ?? false;
+    const slider = document.createElement("span");
+    slider.className = "slider";
+    toggleLabel.appendChild(toggleInput);
+    toggleLabel.appendChild(slider);
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.className = "btn btn--icon btn--outline btn--danger schedule-slot__delete";
+    deleteBtn.title = tr("settings.scheduleRemove");
+    deleteBtn.textContent = "×";
+    deleteBtn.addEventListener("click", () => {
+      _schedules = _schedules.filter(s => s.id !== slot.id);
+      _renderScheduleDOM();
+    });
+
+    header.appendChild(nameInput);
+    header.appendChild(toggleLabel);
+    header.appendChild(deleteBtn);
+
+    // Body: from/to time inputs + day checkboxes
+    const body = document.createElement("div");
+    body.className = "schedule-slot__body";
+
+    const timeRow = document.createElement("div");
+    timeRow.className = "field field--row";
+
+    const fromSub = document.createElement("div");
+    fromSub.className = "field__sub";
+    const fromLabel = document.createElement("label");
+    fromLabel.className = "field__label";
+    fromLabel.textContent = tr("settings.scheduleFrom");
+    const fromInput = document.createElement("input");
+    fromInput.type = "time";
+    fromInput.className = "schedule-slot__from field__input field__input--time";
+    fromInput.value = slot.from ?? "09:00";
+    fromSub.appendChild(fromLabel);
+    fromSub.appendChild(fromInput);
+
+    const toSub = document.createElement("div");
+    toSub.className = "field__sub";
+    const toLabel = document.createElement("label");
+    toLabel.className = "field__label";
+    toLabel.textContent = tr("settings.scheduleTo");
+    const toInput = document.createElement("input");
+    toInput.type = "time";
+    toInput.className = "schedule-slot__to field__input field__input--time";
+    toInput.value = slot.to ?? "17:00";
+    toSub.appendChild(toLabel);
+    toSub.appendChild(toInput);
+
+    timeRow.appendChild(fromSub);
+    timeRow.appendChild(toSub);
+
+    const daysDiv = document.createElement("div");
+    daysDiv.className = "schedule-slot__days";
+
+    for (let i = 0; i < DAY_KEYS.length; i++) {
+      const dayVal = DAY_VALUES[i];
+      const dayLabel = document.createElement("label");
+      dayLabel.className = "schedule-slot__day";
+      const dayCheck = document.createElement("input");
+      dayCheck.type = "checkbox";
+      dayCheck.value = dayVal;
+      dayCheck.checked = (slot.days ?? []).includes(dayVal);
+      dayLabel.appendChild(dayCheck);
+      dayLabel.appendChild(document.createTextNode(tr(`settings.${DAY_KEYS[i]}`)));
+      daysDiv.appendChild(dayLabel);
+    }
+
+    body.appendChild(timeRow);
+    body.appendChild(daysDiv);
+
+    card.appendChild(header);
+    card.appendChild(body);
+    container.appendChild(card);
+  }
+
+  // Show/hide the limit note and add button
+  const addBtn = document.getElementById("add-schedule");
+  const limitNote = document.getElementById("schedules-limit-note");
+  if (_schedules.length >= 5) {
+    addBtn.style.display = "none";
+    limitNote.style.display = "";
+  } else {
+    addBtn.style.display = "";
+    limitNote.style.display = "none";
+  }
+}
+
+function readSchedulesFromDOM() {
+  const cards = document.querySelectorAll(".schedule-slot");
+  return Array.from(cards).map(card => {
+    const days = Array.from(card.querySelectorAll(".schedule-slot__days input:checked"))
+      .map(cb => Number(cb.value));
+    return {
+      id: card.dataset.id,
+      name: card.querySelector(".schedule-slot__name").value.trim() || "Schedule",
+      enabled: card.querySelector(".schedule-slot__enabled").checked,
+      from: card.querySelector(".schedule-slot__from").value || "09:00",
+      to: card.querySelector(".schedule-slot__to").value || "17:00",
+      days
+    };
+  });
 }
 
 // ─── PIN helpers ──────────────────────────────────────────────────────────────
@@ -191,10 +338,8 @@ async function populateForm() {
   document.getElementById("ai-character").value = settings.aiQuotes?.character ?? "";
   document.getElementById("ai-tone").value = settings.aiQuotes?.tone ?? "motivational";
 
-  // Schedule
-  document.getElementById("schedule-enable").checked = settings.schedule?.enabled ?? false;
-  document.getElementById("schedule-from").value = settings.schedule?.from ?? "09:00";
-  document.getElementById("schedule-to").value = settings.schedule?.to ?? "17:00";
+  // Schedule slots
+  renderSchedules(settings.schedules ?? []);
 
   // Pomodoro
   document.getElementById("pom-work").value = settings.pomodoro?.workMinutes ?? 50;
@@ -258,23 +403,11 @@ function showSaveMsg(text, isError = false) {
 async function saveAll() {
   const selectedLang = document.querySelector('input[name="lang"]:checked')?.value ?? "en";
 
-  const scheduleFrom = document.getElementById("schedule-from").value;
-  const scheduleTo = document.getElementById("schedule-to").value;
-  const timeRegex = /^\d{2}:\d{2}$/;
-  if (!timeRegex.test(scheduleFrom) || !timeRegex.test(scheduleTo)) {
-    showSaveMsg(tr("settings.scheduleTimeInvalid"), true);
-    return;
-  }
-
   const partial = {
     language: selectedLang,
     allowanceMinutes: parseInt(document.getElementById("allowance-minutes").value, 10) || 0,
     taskReminder: document.getElementById("task-reminder").value.trim(),
-    schedule: {
-      enabled: document.getElementById("schedule-enable").checked,
-      from: scheduleFrom,
-      to: scheduleTo
-    },
+    schedules: readSchedulesFromDOM(),
     pomodoro: {
       workMinutes: parseInt(document.getElementById("pom-work").value, 10) || 50,
       breakMinutes: parseInt(document.getElementById("pom-break").value, 10) || 10
@@ -424,6 +557,18 @@ function wireEvents() {
   document.getElementById("pin-set-btn").addEventListener("click", handleSetPin);
   document.getElementById("pin-remove-btn").addEventListener("click", handleRemovePin);
   document.getElementById("save-btn").addEventListener("click", saveAll);
+  document.getElementById("add-schedule").addEventListener("click", () => {
+    if (_schedules.length >= 5) return;
+    _schedules.push({
+      id: generateSlotId(),
+      name: "",
+      enabled: true,
+      from: "09:00",
+      to: "17:00",
+      days: []
+    });
+    _renderScheduleDOM();
+  });
   document.getElementById("export-btn").addEventListener("click", handleExport);
   document.getElementById("import-btn").addEventListener("click", handleImport);
   document.getElementById("import-file-input").addEventListener("change", handleImportFile);
