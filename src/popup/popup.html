@@ -19,54 +19,93 @@
     <span class="mode-badge__timer" id="mode-timer" hidden></span>
   </div>
 
-  <!-- ── Add site form ──────────────────────────────────────── -->
-  <section class="add-site">
-    <input
-      class="add-site__input"
-      id="add-input"
-      type="text"
-      placeholder="Add domain (e.g. reddit.com)"
-      autocomplete="off"
-      spellcheck="false"
-    />
-    <button class="add-site__btn btn btn--accent" id="add-btn">Block</button>
-  </section>
+  <!-- ── Block mode view ────────────────────────────────────── -->
+  <div id="block-view">
 
-  <p class="add-msg" id="add-msg" hidden></p>
+    <!-- ── Add site form ────────────────────────────────────── -->
+    <section class="add-site">
+      <input
+        class="add-site__input"
+        id="add-input"
+        type="text"
+        placeholder="Add domain (e.g. reddit.com)"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <button class="add-site__btn btn btn--accent" id="add-btn">Block</button>
+    </section>
 
-  <!-- ── Blocked sites list ─────────────────────────────────── -->
-  <section class="sites-section">
-    <h2 class="sites-section__heading" id="sites-heading">Blocked Sites</h2>
-    <ul class="sites-list" id="sites-list">
-      <!-- Populated by popup.js -->
-    </ul>
-    <p class="sites-empty" id="sites-empty">No sites blocked yet.</p>
-  </section>
+    <p class="add-msg" id="add-msg" hidden></p>
 
-  <!-- ── Manual toggle ─────────────────────────────────────── -->
-  <section class="toggle-section">
-    <label class="toggle-label" id="toggle-label" for="manual-toggle">Block now</label>
-    <label class="toggle-switch">
-      <input type="checkbox" id="manual-toggle" />
-      <span class="toggle-switch__track"></span>
-    </label>
-  </section>
+    <!-- ── Blocked sites list ───────────────────────────────── -->
+    <section class="sites-section">
+      <h2 class="sites-section__heading" id="sites-heading">Blocked Sites</h2>
+      <ul class="sites-list" id="sites-list">
+        <!-- Populated by popup.js -->
+      </ul>
+      <p class="sites-empty" id="sites-empty">No sites blocked yet.</p>
+    </section>
 
-  <!-- ── Pomodoro controls ──────────────────────────────────── -->
-  <section class="pomodoro-section" id="pomodoro-section">
-    <button class="btn btn--pink" id="pomodoro-start-btn">Start Pomodoro</button>
-    <button class="btn btn--outline" id="pomodoro-stop-btn" hidden>Stop Pomodoro</button>
-  </section>
+    <!-- ── Manual toggle ────────────────────────────────────── -->
+    <section class="toggle-section">
+      <label class="toggle-label" id="toggle-label" for="manual-toggle">Block now</label>
+      <label class="toggle-switch">
+        <input type="checkbox" id="manual-toggle" />
+        <span class="toggle-switch__track"></span>
+      </label>
+    </section>
 
-  <!-- ── Duration controls ──────────────────────────────────── -->
-  <section class="duration-section" id="duration-section" hidden>
-    <label class="duration-label" id="duration-label" for="duration-input">
-      Block for (minutes):
-    </label>
-    <div class="duration-row">
-      <input class="duration-input" id="duration-input" type="number" min="1" max="480" value="25" />
-      <button class="btn btn--accent" id="duration-start-btn">Start Timer</button>
-    </div>
+    <!-- ── Pomodoro controls ─────────────────────────────────── -->
+    <section class="pomodoro-section" id="pomodoro-section">
+      <button class="btn btn--pink" id="pomodoro-start-btn">Start Pomodoro</button>
+      <button class="btn btn--outline" id="pomodoro-stop-btn" hidden>Stop Pomodoro</button>
+    </section>
+
+    <!-- ── Duration controls ─────────────────────────────────── -->
+    <section class="duration-section" id="duration-section" hidden>
+      <label class="duration-label" id="duration-label" for="duration-input">
+        Block for (minutes):
+      </label>
+      <div class="duration-row">
+        <input class="duration-input" id="duration-input" type="number" min="1" max="480" value="25" />
+        <button class="btn btn--accent" id="duration-start-btn">Start Timer</button>
+      </div>
+    </section>
+
+  </div><!-- #block-view -->
+
+  <!-- ── Allow-only mode view ───────────────────────────────── -->
+  <div id="allow-view" hidden>
+
+    <section class="add-site">
+      <input
+        class="add-site__input"
+        id="add-allow-input"
+        type="text"
+        placeholder="Add allowed domain (e.g. youtube.com)"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <button class="add-site__btn btn btn--accent" id="add-allow-btn">Allow</button>
+    </section>
+
+    <p class="add-msg" id="add-allow-msg" hidden></p>
+
+    <section class="sites-section">
+      <h2 class="sites-section__heading" id="allowed-heading">Allowed Sites</h2>
+      <ul class="sites-list" id="allow-list">
+        <!-- Populated by popup.js -->
+      </ul>
+      <p class="sites-empty" id="allow-empty">No sites allowed yet. All sites are blocked.</p>
+    </section>
+
+  </div><!-- #allow-view -->
+
+  <!-- ── Allow-only toggle ─────────────────────────────────── -->
+  <section class="toggle-section" style="justify-content:center;padding:8px 12px">
+    <button class="btn btn--outline" id="allowonly-btn" style="width:100%">
+      Enable Allow-Only Mode
+    </button>
   </section>
 
   <!-- ── Footer ─────────────────────────────────────────────── -->

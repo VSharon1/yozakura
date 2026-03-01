@@ -43,6 +43,7 @@
 
 const DEFAULT_STATE = {
   blocklist: [],
+  allowlist: [],
   settings: {
     mode: "manual",
     manualActive: false,
@@ -88,6 +89,7 @@ async function _readAll() {
       // Deep-merge top-level keys so new settings fields always exist
       const merged = {
         blocklist: data.blocklist ?? DEFAULT_STATE.blocklist,
+        allowlist: data.allowlist ?? DEFAULT_STATE.allowlist,
         settings: Object.assign({}, DEFAULT_STATE.settings, data.settings ?? {}),
         stats: data.stats ?? DEFAULT_STATE.stats
       };
@@ -187,6 +189,42 @@ export async function removeSite(domain) {
   await _write({ blocklist: updated });
 }
 
+// ─── Allowlist ──────────────────────────────────────────────────────────────
+
+/**
+ * Returns the list of allowed domains (allow-only mode).
+ * @returns {Promise<string[]>}
+ */
+export async function getAllowlist() {
+  const all = await _readAll();
+  return all.allowlist;
+}
+
+/**
+ * Adds a domain to the allowlist if not already present.
+ * @param {string} domain
+ */
+export async function addAllowSite(domain) {
+  const normalised = normaliseDomain(domain);
+  if (!normalised) return;
+  const all = await _readAll();
+  if (!all.allowlist.includes(normalised)) {
+    all.allowlist.push(normalised);
+    await _write({ allowlist: all.allowlist });
+  }
+}
+
+/**
+ * Removes a domain from the allowlist.
+ * @param {string} domain
+ */
+export async function removeAllowSite(domain) {
+  const normalised = normaliseDomain(domain);
+  const all = await _readAll();
+  const updated = all.allowlist.filter((d) => d !== normalised);
+  await _write({ allowlist: updated });
+}
+
 /**
  * Strips protocol, www prefix, paths, and lowercases a URL/domain string.
  * @param {string} raw
@@ -271,6 +309,7 @@ export async function exportAll() {
 export async function importAll(data) {
   await _write({
     blocklist: data.blocklist ?? [],
+    allowlist: data.allowlist ?? [],
     settings: Object.assign({}, DEFAULT_STATE.settings, data.settings ?? {}),
     stats: data.stats ?? {}
   });
@@ -285,6 +324,7 @@ export async function initDefaults() {
   // _readAll already merges defaults, just write back to persist them
   await _write({
     blocklist: all.blocklist,
+    allowlist: all.allowlist,
     settings: all.settings,
     stats: all.stats
   });

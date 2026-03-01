@@ -66,6 +66,13 @@ function applyTranslations() {
   document.getElementById("challenge-submit").textContent = tr("popup.challengeSubmit");
   document.getElementById("challenge-cancel").textContent = tr("popup.challengeCancel");
   document.getElementById("challenge-error").textContent = tr("popup.challengeError");
+  document.getElementById("add-allow-input").placeholder = tr("popup.addAllowPlaceholder");
+  document.getElementById("add-allow-btn").textContent = tr("popup.allowButton");
+  document.getElementById("allowed-heading").textContent = tr("popup.allowedSites");
+  document.getElementById("allow-empty").textContent = tr("popup.noAllowedSites");
+  const isAllowlist = state?.settings?.mode === "allowlist";
+  document.getElementById("allowonly-btn").textContent =
+    isAllowlist ? tr("popup.allowOnlyDisable") : tr("popup.allowOnlyEnable");
 }
 
 // ─── Mode badge ───────────────────────────────────────────────────────────────
@@ -135,6 +142,12 @@ function updateModeBadge(settings, active) {
       }
       break;
     }
+    case "allowlist": {
+      label.textContent = tr("popup.modeBadge.allowlist");
+      label.classList.add("mode--active");
+      timerEl.hidden = true;
+      break;
+    }
     default: {
       // manual
       label.textContent = tr("popup.modeBadge.manual");
@@ -172,6 +185,41 @@ function renderSitesList(blocklist, settings) {
     btn.textContent = "🗑️";
     btn.dataset.domain = domain;
     btn.addEventListener("click", () => handleRemoveSite(domain, settings));
+
+    li.appendChild(span);
+    li.appendChild(btn);
+    list.appendChild(li);
+  }
+}
+
+// ─── Allowlist rendering ──────────────────────────────────────────────────────
+
+function renderAllowlist(allowlist) {
+  const list = document.getElementById("allow-list");
+  const empty = document.getElementById("allow-empty");
+  list.innerHTML = "";
+
+  if (allowlist.length === 0) {
+    empty.hidden = false;
+    return;
+  }
+  empty.hidden = true;
+
+  for (const domain of allowlist) {
+    const li = document.createElement("li");
+    li.className = "sites-list__item";
+
+    const span = document.createElement("span");
+    span.className = "sites-list__domain";
+    span.textContent = domain;
+
+    const btn = document.createElement("button");
+    btn.className = "sites-list__remove-btn";
+    btn.title = tr("popup.removeButton");
+    btn.textContent = "🗑️";
+    btn.addEventListener("click", () => {
+      sendMsg({ type: "REMOVE_ALLOWSITE", domain }).then(refresh);
+    });
 
     li.appendChild(span);
     li.appendChild(btn);
@@ -302,6 +350,14 @@ function showAddMsg(text, isError = false) {
   setTimeout(() => { el.hidden = true; }, 3000);
 }
 
+function showAddAllowMsg(text, isError = false) {
+  const el = document.getElementById("add-allow-msg");
+  el.textContent = text;
+  el.className = `add-msg${isError ? " add-msg--error" : ""}`;
+  el.hidden = false;
+  setTimeout(() => { el.hidden = true; }, 3000);
+}
+
 function normalizeDomain(raw) {
   // Strip protocol prefix if user typed e.g. "https://reddit.com"
   return raw.trim().replace(/^https?:\/\//i, "").replace(/\/.*$/, "").toLowerCase();
@@ -387,6 +443,48 @@ document.getElementById("lang-toggle").addEventListener("click", async () => {
   refresh();
 });
 
+document.getElementById("add-allow-btn").addEventListener("click", async () => {
+  const input = document.getElementById("add-allow-input");
+  const domain = normalizeDomain(input.value);
+
+  if (!isValidHostname(domain)) {
+    showAddAllowMsg(tr("popup.invalidDomain"), true);
+    return;
+  }
+
+  const freshState = await sendMsg({ type: "GET_STATE" });
+  if (freshState?.allowlist?.includes(domain)) {
+    showAddAllowMsg(tr("popup.alreadyAllowed"), false);
+    input.value = "";
+    return;
+  }
+
+  await sendMsg({ type: "ADD_ALLOWSITE", domain });
+  input.value = "";
+  refresh();
+});
+
+document.getElementById("add-allow-input").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") document.getElementById("add-allow-btn").click();
+});
+
+document.getElementById("allowonly-btn").addEventListener("click", async () => {
+  const isAllowlist = state?.settings?.mode === "allowlist";
+  if (isAllowlist) {
+    if (state?.settings?.challengeEnabled) {
+      openChallengeModal(async () => {
+        await sendMsg({ type: "SET_ALLOWLIST", active: false });
+        refresh();
+      });
+      return;
+    }
+    await sendMsg({ type: "SET_ALLOWLIST", active: false });
+  } else {
+    await sendMsg({ type: "SET_ALLOWLIST", active: true });
+  }
+  refresh();
+});
+
 document.getElementById("settings-link").addEventListener("click", (e) => {
   e.preventDefault();
   chrome.tabs.create({ url: chrome.runtime.getURL("src/settings/settings.html") });
@@ -395,16 +493,25 @@ document.getElementById("settings-link").addEventListener("click", (e) => {
 // ─── Rendering ────────────────────────────────────────────────────────────────
 
 function updateControlsVisibility(settings, active) {
+  const isAllowlist = settings.mode === "allowlist";
+
+  // Switch between block-view and allow-view
+  document.getElementById("block-view").hidden = isAllowlist;
+  document.getElementById("allow-view").hidden = !isAllowlist;
+  document.getElementById("allowonly-btn").textContent =
+    isAllowlist ? tr("popup.allowOnlyDisable") : tr("popup.allowOnlyEnable");
+
+  if (isAllowlist) return;
+
   const pomodoroSection = document.getElementById("pomodoro-section");
   const durationSection = document.getElementById("duration-section");
   const startBtn = document.getElementById("pomodoro-start-btn");
   const stopBtn = document.getElementById("pomodoro-stop-btn");
   const manualToggle = document.getElementById("manual-toggle");
 
-  // Show pomodoro section only for pomodoro mode or when manual
-  const isPomodoro = settings.mode === "pomodoro";
   pomodoroSection.hidden = false;
 
+  const isPomodoro = settings.mode === "pomodoro";
   if (isPomodoro && settings.pomodoroPhase !== "idle") {
     startBtn.hidden = true;
     stopBtn.hidden = false;
@@ -413,11 +520,9 @@ function updateControlsVisibility(settings, active) {
     stopBtn.hidden = true;
   }
 
-  // Show duration section only for duration mode or no active blocking
   const isDuration = settings.mode === "duration" && settings.durationEnd;
   durationSection.hidden = !!isDuration;
 
-  // Sync manual toggle
   manualToggle.checked = active && settings.mode === "manual";
 }
 
@@ -426,10 +531,11 @@ function updateControlsVisibility(settings, active) {
 async function refresh() {
   state = await sendMsg({ type: "GET_STATE" });
   if (!state?.ok) return;
-  const { settings, blocklist, active } = state;
+  const { settings, blocklist, allowlist, active } = state;
 
   updateModeBadge(settings, active);
   renderSitesList(blocklist, settings);
+  renderAllowlist(allowlist ?? []);
   updateControlsVisibility(settings, active);
 }
 

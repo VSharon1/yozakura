@@ -15,6 +15,9 @@ import {
   getBlocklist,
   addSite,
   removeSite,
+  getAllowlist,
+  addAllowSite,
+  removeAllowSite,
   initDefaults
 } from "../shared/storage.js";
 
@@ -26,6 +29,9 @@ const ALARM_POMODORO = "yozakura-pomodoro";
 
 // Base URL for the block page (built at runtime since extension ID varies)
 const BLOCK_PAGE_BASE = chrome.runtime.getURL("src/block-page/block.html");
+
+// Fixed rule ID for the allowlist catch-all redirect rule
+const CATCH_ALL_RULE_ID = 9_000_000;
 
 // ─── Initialisation ───────────────────────────────────────────────────────────
 
@@ -143,6 +149,9 @@ export async function isBlockingActive(settings) {
     case "pomodoro":
       return s.pomodoroPhase === "work";
 
+    case "allowlist":
+      return true;
+
     default:
       return false;
   }
@@ -183,7 +192,38 @@ export async function updateDNRRules() {
 
   const addRules = [];
 
-  if (active && blocklist.length > 0) {
+  if (settings.mode === "allowlist") {
+    // Catch-all redirect (priority 1) + per-domain allow rules (priority 2)
+    const allowlist = await getAllowlist();
+    addRules.push({
+      id: CATCH_ALL_RULE_ID,
+      priority: 1,
+      action: {
+        type: "redirect",
+        redirect: {
+          // \1 is replaced by the captured domain name at match time
+          regexSubstitution: `${BLOCK_PAGE_BASE}?site=\\1`
+        }
+      },
+      condition: {
+        // Capture the bare hostname (strips www., ignores path/query)
+        regexFilter: "^https?://(?:www\\.)?([^/?#]+)",
+        isUrlFilterCaseSensitive: false,
+        resourceTypes: ["main_frame"]
+      }
+    });
+    for (const domain of allowlist) {
+      addRules.push({
+        id: domainToRuleId(domain),
+        priority: 2,
+        action: { type: "allow" },
+        condition: {
+          urlFilter: `||${domain}^`,
+          resourceTypes: ["main_frame"]
+        }
+      });
+    }
+  } else if (active && blocklist.length > 0) {
     for (const domain of blocklist) {
       const id = domainToRuleId(domain);
       const redirectUrl = `${BLOCK_PAGE_BASE}?site=${encodeURIComponent(domain)}`;
@@ -195,7 +235,6 @@ export async function updateDNRRules() {
           redirect: { url: redirectUrl }
         },
         condition: {
-          // "||domain^" matches the domain and all subdomains/paths
           urlFilter: `||${domain}^`,
           resourceTypes: ["main_frame"]
         }
@@ -290,6 +329,25 @@ async function handleMessage(msg) {
       await updateDNRRules();
       return { ok: true };
     }
+    case "ADD_ALLOWSITE": {
+      await addAllowSite(msg.domain);
+      await updateDNRRules();
+      return { ok: true };
+    }
+    case "REMOVE_ALLOWSITE": {
+      await removeAllowSite(msg.domain);
+      await updateDNRRules();
+      return { ok: true };
+    }
+    case "SET_ALLOWLIST": {
+      if (msg.active) {
+        await saveSettings({ mode: "allowlist" });
+      } else {
+        await saveSettings({ mode: "manual", manualActive: false });
+      }
+      await updateDNRRules();
+      return { ok: true };
+    }
     case "SET_MANUAL": {
       await saveSettings({ mode: "manual", manualActive: msg.active });
       await updateDNRRules();
@@ -314,8 +372,9 @@ async function handleMessage(msg) {
     case "GET_STATE": {
       const settings = await getSettings();
       const blocklist = await getBlocklist();
+      const allowlist = await getAllowlist();
       const active = await isBlockingActive(settings);
-      return { ok: true, settings, blocklist, active };
+      return { ok: true, settings, blocklist, allowlist, active };
     }
     default:
       return { ok: false, error: `Unknown message type: ${msg.type}` };

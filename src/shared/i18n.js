@@ -29,6 +29,7 @@ export const translations = {
     "popup.modeBadge.schedule": "SCHEDULE",
     "popup.modeBadge.duration": "DURATION",
     "popup.modeBadge.manual": "MANUAL",
+    "popup.modeBadge.allowlist": "ALLOW-ONLY",
     "popup.modeBadge.off": "OFF",
     "popup.addPlaceholder": "Add domain (e.g. reddit.com)",
     "popup.addButton": "Block",
@@ -57,6 +58,13 @@ export const translations = {
     "popup.challengeSubmit": "Disable",
     "popup.challengeCancel": "Cancel",
     "popup.challengeError": "Incorrect. Try again.",
+    "popup.allowOnlyEnable": "Enable Allow-Only Mode",
+    "popup.allowOnlyDisable": "Disable Allow-Only Mode",
+    "popup.allowedSites": "Allowed Sites",
+    "popup.noAllowedSites": "No sites allowed yet. All sites are blocked.",
+    "popup.addAllowPlaceholder": "Add allowed domain (e.g. youtube.com)",
+    "popup.allowButton": "Allow",
+    "popup.alreadyAllowed": "Already allowed",
 
     // ── Block Page ───────────────────────────────────────────────────────────
     "block.title": "Site Blocked",
@@ -152,6 +160,7 @@ export const translations = {
     "popup.modeBadge.schedule": "ZEITPLAN",
     "popup.modeBadge.duration": "TIMER",
     "popup.modeBadge.manual": "MANUELL",
+    "popup.modeBadge.allowlist": "NUR-ERLAUBT",
     "popup.modeBadge.off": "AUS",
     "popup.addPlaceholder": "Domain hinzufügen (z. B. reddit.com)",
     "popup.addButton": "Sperren",
@@ -180,6 +189,13 @@ export const translations = {
     "popup.challengeSubmit": "Deaktivieren",
     "popup.challengeCancel": "Abbrechen",
     "popup.challengeError": "Falsch. Nochmal versuchen.",
+    "popup.allowOnlyEnable": "Nur-Erlaubt-Modus aktivieren",
+    "popup.allowOnlyDisable": "Nur-Erlaubt-Modus deaktivieren",
+    "popup.allowedSites": "Erlaubte Seiten",
+    "popup.noAllowedSites": "Noch keine Seiten erlaubt. Alle Seiten sind gesperrt.",
+    "popup.addAllowPlaceholder": "Erlaubte Domain hinzufügen (z. B. youtube.com)",
+    "popup.allowButton": "Erlauben",
+    "popup.alreadyAllowed": "Bereits erlaubt",
 
     // ── Block Page ───────────────────────────────────────────────────────────
     "block.title": "Seite gesperrt",
