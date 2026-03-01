@@ -14,7 +14,8 @@
   ],
   "background": {
     "service_worker": "src/background/service-worker.js",
-    "type": "module"
+    "type": "module",
+    "incognito": "spanning"
   },
   "action": {
     "default_popup": "src/popup/popup.html",

@@ -424,3 +424,25 @@ body {
   color: var(--muted);
   margin-top: 8px;
 }
+
+/* ── Incognito note ──────────────────────────────────────────────────────── */
+
+.incognito-note {
+  margin-top: 14px;
+  padding: 10px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.incognito-note strong {
+  color: var(--text);
+}
+
+.incognito-note code {
+  font-family: "Consolas", monospace;
+  color: var(--accent);
+}
