@@ -28,11 +28,11 @@
 
 Extend the YouTube content-script model to other major platforms. Pure content scripts — no new permissions required.
 
-- [ ] Twitter/X feed removal — hide timeline feed, trending panel, "Who to follow", notifications dot
-- [ ] Reddit feed removal — hide home feed, NSFW blur, promoted posts, awards
-- [ ] Instagram feed removal — hide explore grid, reels tab, suggested posts
-- [ ] LinkedIn feed removal — hide feed, "People you may know", news module
-- [ ] Per-platform filter settings in Settings — extend content-filter section with collapsible platform groups
+- ✅ Twitter/X feed removal — hide timeline feed, trending panel, "Who to follow", notifications dot
+- ✅ Reddit feed removal — hide home feed, NSFW blur, promoted posts, awards
+- ✅ Instagram feed removal — hide explore grid, reels tab, suggested posts
+- ✅ LinkedIn feed removal — hide feed, "People you may know", news module
+- ✅ Per-platform filter settings in Settings — extend content-filter section with collapsible platform groups
 
 ---
 
