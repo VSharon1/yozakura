@@ -173,16 +173,32 @@ async function populateForm() {
 
 // ─── Collect & save all settings ─────────────────────────────────────────────
 
+function showSaveMsg(text, isError = false) {
+  const el = document.getElementById("save-msg");
+  el.textContent = text;
+  el.className = `save-bar__msg${isError ? " field-msg--error" : ""}`;
+  el.hidden = false;
+  setTimeout(() => { el.hidden = true; }, 3000);
+}
+
 async function saveAll() {
   const selectedLang = document.querySelector('input[name="lang"]:checked')?.value ?? "en";
+
+  const scheduleFrom = document.getElementById("schedule-from").value;
+  const scheduleTo = document.getElementById("schedule-to").value;
+  const timeRegex = /^\d{2}:\d{2}$/;
+  if (!timeRegex.test(scheduleFrom) || !timeRegex.test(scheduleTo)) {
+    showSaveMsg(tr("settings.scheduleTimeInvalid"), true);
+    return;
+  }
 
   const partial = {
     language: selectedLang,
     taskReminder: document.getElementById("task-reminder").value.trim(),
     schedule: {
       enabled: document.getElementById("schedule-enable").checked,
-      from: document.getElementById("schedule-from").value,
-      to: document.getElementById("schedule-to").value
+      from: scheduleFrom,
+      to: scheduleTo
     },
     pomodoro: {
       workMinutes: parseInt(document.getElementById("pom-work").value, 10) || 50,
@@ -205,10 +221,7 @@ async function saveAll() {
   lang = selectedLang;
   applyTranslations();
 
-  const msg = document.getElementById("save-msg");
-  msg.textContent = tr("settings.saved");
-  msg.hidden = false;
-  setTimeout(() => { msg.hidden = true; }, 3000);
+  showSaveMsg(tr("settings.saved"));
 }
 
 // ─── Data: export, import, clear stats ───────────────────────────────────────

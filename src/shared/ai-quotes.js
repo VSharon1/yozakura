@@ -1,8 +1,8 @@
 /**
  * ai-quotes.js — AI-powered (and fallback) motivational quote fetcher
  *
- * Supported providers: openai (gpt-4o), anthropic (claude-3-5-haiku),
- * gemini (gemini-1.5-flash). Falls back to hardcoded anime-style quotes
+ * Supported providers: openai (gpt-4o-mini), anthropic (claude-haiku-4-5),
+ * gemini (gemini-2.0-flash). Falls back to hardcoded anime-style quotes
  * when no provider is configured or when a request fails.
  */
 
@@ -52,7 +52,7 @@ function buildPrompt(character, tone) {
 
 // ─── Provider implementations ─────────────────────────────────────────────────
 
-/** Fetch a quote via OpenAI Chat Completions (gpt-4o). */
+/** Fetch a quote via OpenAI Chat Completions (gpt-4o-mini). */
 async function fetchFromOpenAI(apiKey, prompt) {
   const res = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
@@ -61,7 +61,7 @@ async function fetchFromOpenAI(apiKey, prompt) {
       Authorization: `Bearer ${apiKey}`
     },
     body: JSON.stringify({
-      model: "gpt-4o",
+      model: "gpt-4o-mini",
       max_tokens: 120,
       messages: [
         {
@@ -77,7 +77,7 @@ async function fetchFromOpenAI(apiKey, prompt) {
   return data.choices[0].message.content.trim();
 }
 
-/** Fetch a quote via Anthropic Messages API (claude-3-5-haiku). */
+/** Fetch a quote via Anthropic Messages API (claude-haiku-4-5). */
 async function fetchFromAnthropic(apiKey, prompt) {
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -98,9 +98,9 @@ async function fetchFromAnthropic(apiKey, prompt) {
   return data.content[0].text.trim();
 }
 
-/** Fetch a quote via Google Gemini (gemini-1.5-flash). */
+/** Fetch a quote via Google Gemini (gemini-2.0-flash). */
 async function fetchFromGemini(apiKey, prompt) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
   const res = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

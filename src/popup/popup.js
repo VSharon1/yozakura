@@ -235,10 +235,41 @@ document.getElementById("pin-input").addEventListener("keydown", (e) => {
 
 // ─── Controls wiring ──────────────────────────────────────────────────────────
 
+function showAddMsg(text, isError = false) {
+  const el = document.getElementById("add-msg");
+  el.textContent = text;
+  el.className = `add-msg${isError ? " add-msg--error" : ""}`;
+  el.hidden = false;
+  setTimeout(() => { el.hidden = true; }, 3000);
+}
+
+function normalizeDomain(raw) {
+  // Strip protocol prefix if user typed e.g. "https://reddit.com"
+  return raw.trim().replace(/^https?:\/\//i, "").replace(/\/.*$/, "").toLowerCase();
+}
+
+function isValidHostname(domain) {
+  // Must be non-empty, no spaces, contain at least one dot
+  return domain.length > 0 && !/\s/.test(domain) && domain.includes(".");
+}
+
 document.getElementById("add-btn").addEventListener("click", async () => {
   const input = document.getElementById("add-input");
-  const domain = input.value.trim();
-  if (!domain) return;
+  const domain = normalizeDomain(input.value);
+
+  if (!isValidHostname(domain)) {
+    showAddMsg(tr("popup.invalidDomain"), true);
+    return;
+  }
+
+  // Check for duplicate before sending
+  const state = await sendMsg({ type: "GET_STATE" });
+  if (state?.blocklist?.includes(domain)) {
+    showAddMsg(tr("popup.alreadyBlocked"), false);
+    input.value = "";
+    return;
+  }
+
   await sendMsg({ type: "ADD_SITE", domain });
   input.value = "";
   refresh();

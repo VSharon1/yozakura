@@ -190,8 +190,7 @@ async function init() {
     quoteEl.textContent = quote;
     quoteEl.classList.add("loaded");
   } catch {
-    quoteEl.textContent =
-      "A sword that is never drawn grows dull. Sharpen your mind — return to your task.";
+    quoteEl.textContent = t("block.fallbackQuote", lang);
     quoteEl.classList.add("loaded");
   }
 }

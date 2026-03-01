@@ -144,6 +144,18 @@ body {
   border-color: var(--accent);
 }
 
+/* ── Add site feedback message ──────────────────────────────────────────── */
+
+.add-msg {
+  margin: 0 16px 4px;
+  font-size: 12px;
+  color: var(--accent);
+}
+
+.add-msg--error {
+  color: var(--pink);
+}
+
 /* ── Blocked sites list ─────────────────────────────────────────────────── */
 
 .sites-section {

@@ -49,6 +49,8 @@ export const translations = {
     "popup.durationLabel": "Block for (minutes):",
     "popup.durationStart": "Start Timer",
     "popup.durationRemaining": "Blocking ends in",
+    "popup.alreadyBlocked": "Already blocked",
+    "popup.invalidDomain": "Invalid domain",
 
     // ── Block Page ───────────────────────────────────────────────────────────
     "block.title": "Site Blocked",
@@ -62,6 +64,7 @@ export const translations = {
     "block.scheduleActive": "Schedule active until",
     "block.pomodoroWork": "Stay focused — work session active",
     "block.pomodoroBreak": "Break in",
+    "block.fallbackQuote": "A sword that is never drawn grows dull. Sharpen your mind — return to your task.",
 
     // ── Settings ─────────────────────────────────────────────────────────────
     "settings.title": "Yozakura Settings",
@@ -82,9 +85,9 @@ export const translations = {
     "settings.sectionAI": "AI Quotes",
     "settings.aiProvider": "Provider",
     "settings.aiProviderNone": "None (use fallback quotes)",
-    "settings.aiProviderOpenAI": "OpenAI (gpt-4o)",
-    "settings.aiProviderAnthropic": "Anthropic (claude-3-5-haiku)",
-    "settings.aiProviderGemini": "Google Gemini (gemini-1.5-flash)",
+    "settings.aiProviderOpenAI": "OpenAI (gpt-4o-mini)",
+    "settings.aiProviderAnthropic": "Anthropic (claude-haiku-4-5)",
+    "settings.aiProviderGemini": "Google Gemini (gemini-2.0-flash)",
     "settings.aiKey": "API Key",
     "settings.aiKeyShow": "Show",
     "settings.aiKeyHide": "Hide",
@@ -99,6 +102,7 @@ export const translations = {
     "settings.scheduleEnable": "Enable schedule blocking",
     "settings.scheduleFrom": "Block from",
     "settings.scheduleTo": "until",
+    "settings.scheduleTimeInvalid": "Invalid time format (HH:MM required).",
     "settings.sectionPomodoro": "Pomodoro",
     "settings.pomodoroWork": "Work session (minutes)",
     "settings.pomodoroBreak": "Break (minutes)",
@@ -152,6 +156,8 @@ export const translations = {
     "popup.durationLabel": "Sperren für (Minuten):",
     "popup.durationStart": "Timer starten",
     "popup.durationRemaining": "Sperre endet in",
+    "popup.alreadyBlocked": "Bereits gesperrt",
+    "popup.invalidDomain": "Ungültige Domain",
 
     // ── Block Page ───────────────────────────────────────────────────────────
     "block.title": "Seite gesperrt",
@@ -165,6 +171,7 @@ export const translations = {
     "block.scheduleActive": "Zeitplan aktiv bis",
     "block.pomodoroWork": "Konzentriert bleiben — Arbeitssitzung aktiv",
     "block.pomodoroBreak": "Pause in",
+    "block.fallbackQuote": "Ein Schwert, das nie gezogen wird, wird stumpf. Schärfe deinen Geist — kehre zu deiner Aufgabe zurück.",
 
     // ── Settings ─────────────────────────────────────────────────────────────
     "settings.title": "Yozakura Einstellungen",
@@ -185,9 +192,9 @@ export const translations = {
     "settings.sectionAI": "KI-Zitate",
     "settings.aiProvider": "Anbieter",
     "settings.aiProviderNone": "Keiner (Fallback-Zitate verwenden)",
-    "settings.aiProviderOpenAI": "OpenAI (gpt-4o)",
-    "settings.aiProviderAnthropic": "Anthropic (claude-3-5-haiku)",
-    "settings.aiProviderGemini": "Google Gemini (gemini-1.5-flash)",
+    "settings.aiProviderOpenAI": "OpenAI (gpt-4o-mini)",
+    "settings.aiProviderAnthropic": "Anthropic (claude-haiku-4-5)",
+    "settings.aiProviderGemini": "Google Gemini (gemini-2.0-flash)",
     "settings.aiKey": "API-Schlüssel",
     "settings.aiKeyShow": "Anzeigen",
     "settings.aiKeyHide": "Verbergen",
@@ -202,6 +209,7 @@ export const translations = {
     "settings.scheduleEnable": "Zeitplan-Sperre aktivieren",
     "settings.scheduleFrom": "Sperren von",
     "settings.scheduleTo": "bis",
+    "settings.scheduleTimeInvalid": "Ungültiges Zeitformat (HH:MM erforderlich).",
     "settings.sectionPomodoro": "Pomodoro",
     "settings.pomodoroWork": "Arbeitssitzung (Minuten)",
     "settings.pomodoroBreak": "Pause (Minuten)",
