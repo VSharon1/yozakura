@@ -12,6 +12,7 @@ import {
   getSettings,
   saveSettings,
   clearStats,
+  getStats,
   exportAll,
   importAll
 } from "../shared/storage.js";
@@ -61,6 +62,9 @@ function applyTranslations() {
   document.getElementById("label-pom-break").textContent = tr("settings.pomodoroBreak");
   document.getElementById("heading-reminder").textContent = tr("settings.sectionReminder");
   document.getElementById("task-reminder").placeholder = tr("settings.reminderPlaceholder");
+  document.getElementById("heading-stats").textContent = tr("settings.sectionStats");
+  document.getElementById("label-stats-today").textContent = tr("settings.statsToday");
+  document.getElementById("label-stats-week").textContent = tr("settings.statsWeek");
   document.getElementById("heading-data").textContent = tr("settings.sectionData");
   document.getElementById("export-btn").textContent = tr("settings.exportBtn");
   document.getElementById("import-btn").textContent = tr("settings.importBtn");
@@ -275,7 +279,64 @@ async function handleClearStats() {
   const confirmed = window.confirm(tr("settings.clearStatsConfirm"));
   if (!confirmed) return;
   await clearStats();
+  await renderStats();
   showDataMsg(tr("settings.statsClearedMsg"));
+}
+
+// ─── Stats Dashboard ──────────────────────────────────────────────────────────
+
+function renderStatsList(containerId, entries) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = "";
+  for (const [domain, count] of entries) {
+    const row = document.createElement("div");
+    row.className = "stats-row";
+    const d = document.createElement("span");
+    d.className = "stats-row__domain";
+    d.textContent = domain;
+    const c = document.createElement("span");
+    c.className = "stats-row__count";
+    c.textContent = count;
+    row.appendChild(d);
+    row.appendChild(c);
+    el.appendChild(row);
+  }
+}
+
+async function renderStats() {
+  const stats = await getStats();
+  const today = new Date().toISOString().slice(0, 10);
+
+  // Aggregate the 7 days prior to today (excludes today to avoid double-counting)
+  const weekAgg = {};
+  for (let i = 1; i <= 7; i++) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    for (const [domain, count] of Object.entries(stats[key] ?? {})) {
+      weekAgg[domain] = (weekAgg[domain] ?? 0) + count;
+    }
+  }
+
+  const todayEntries = Object.entries(stats[today] ?? {}).sort((a, b) => b[1] - a[1]);
+  const weekEntries = Object.entries(weekAgg).sort((a, b) => b[1] - a[1]);
+
+  const todayLabel = document.getElementById("label-stats-today");
+  const weekLabel = document.getElementById("label-stats-week");
+  const emptyEl = document.getElementById("stats-empty");
+
+  todayLabel.hidden = todayEntries.length === 0;
+  renderStatsList("stats-today", todayEntries);
+
+  weekLabel.hidden = weekEntries.length === 0;
+  renderStatsList("stats-week", weekEntries);
+
+  if (todayEntries.length === 0 && weekEntries.length === 0) {
+    emptyEl.textContent = tr("settings.statsEmpty");
+    emptyEl.hidden = false;
+  } else {
+    emptyEl.hidden = true;
+  }
 }
 
 // ─── API key show/hide toggle ─────────────────────────────────────────────────
@@ -323,6 +384,7 @@ async function init() {
   lang = settings.language ?? "en";
   applyTranslations();
   await populateForm();
+  await renderStats();
   wireEvents();
 }
 

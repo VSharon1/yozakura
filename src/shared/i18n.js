@@ -121,6 +121,10 @@ export const translations = {
     "settings.clearStats": "Clear All Stats",
     "settings.clearStatsConfirm": "Are you sure you want to clear all statistics? This cannot be undone.",
     "settings.statsClearedMsg": "Statistics cleared.",
+    "settings.sectionStats": "Statistics",
+    "settings.statsToday": "Today",
+    "settings.statsWeek": "Last 7 Days",
+    "settings.statsEmpty": "No statistics yet.",
     "settings.saved": "Settings saved.",
   },
 
@@ -235,6 +239,10 @@ export const translations = {
     "settings.clearStats": "Alle Statistiken löschen",
     "settings.clearStatsConfirm": "Alle Statistiken wirklich löschen? Das kann nicht rückgängig gemacht werden.",
     "settings.statsClearedMsg": "Statistiken gelöscht.",
+    "settings.sectionStats": "Statistiken",
+    "settings.statsToday": "Heute",
+    "settings.statsWeek": "Letzte 7 Tage",
+    "settings.statsEmpty": "Noch keine Statistiken.",
     "settings.saved": "Einstellungen gespeichert.",
   }
 };

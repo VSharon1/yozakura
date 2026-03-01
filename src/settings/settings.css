@@ -334,3 +334,33 @@ body {
 .save-bar__msg[hidden] {
   display: none;
 }
+
+/* ── Stats Dashboard ─────────────────────────────────────────────────────── */
+
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+
+.stats-row:last-child {
+  border-bottom: none;
+}
+
+.stats-row__domain {
+  color: var(--text);
+}
+
+.stats-row__count {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.stats-empty {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 8px;
+}
