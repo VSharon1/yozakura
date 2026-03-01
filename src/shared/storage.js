@@ -213,12 +213,12 @@ export async function getBlocklist() {
 }
 
 /**
- * Adds a domain to the blocklist if not already present.
- * Normalises to lowercase with no leading "www.".
+ * Adds a domain or pattern to the blocklist if not already present.
+ * Normalises the pattern (preserves paths and wildcards).
  * @param {string} domain
  */
 export async function addSite(domain) {
-  const normalised = normaliseDomain(domain);
+  const normalised = normalisePattern(domain);
   if (!normalised) return;
   const all = await _readAll();
   if (!all.blocklist.includes(normalised)) {
@@ -228,11 +228,11 @@ export async function addSite(domain) {
 }
 
 /**
- * Removes a domain from the blocklist.
+ * Removes a domain or pattern from the blocklist.
  * @param {string} domain
  */
 export async function removeSite(domain) {
-  const normalised = normaliseDomain(domain);
+  const normalised = normalisePattern(domain);
   const all = await _readAll();
   const updated = all.blocklist.filter((d) => d !== normalised);
   await _write({ blocklist: updated });
@@ -287,6 +287,23 @@ export function normaliseDomain(raw) {
   s = s.replace(/^www\./, "");
   // Strip path / query / hash
   s = s.split("/")[0].split("?")[0].split("#")[0];
+  return s;
+}
+
+/**
+ * Normalises a pattern that may include a path or wildcard.
+ * Unlike normaliseDomain, this preserves path components for path-blocking
+ * and keeps wildcard prefixes/suffixes (*.domain.com, domain.*).
+ * @param {string} raw
+ * @returns {string}
+ */
+export function normalisePattern(raw) {
+  let s = raw.trim().toLowerCase();
+  s = s.replace(/^https?:\/\//, "");
+  // Strip www. only from the domain portion (not paths or wildcards)
+  s = s.replace(/^www\./, "");
+  // Remove trailing slash only
+  s = s.replace(/\/$/, "");
   return s;
 }
 

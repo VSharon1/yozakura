@@ -359,20 +359,29 @@ function showAddAllowMsg(text, isError = false) {
 }
 
 function normalizeDomain(raw) {
-  // Strip protocol prefix if user typed e.g. "https://reddit.com"
-  return raw.trim().replace(/^https?:\/\//i, "").replace(/\/.*$/, "").toLowerCase();
+  // Strip protocol, strip leading www., preserve paths and wildcards
+  return raw.trim()
+    .replace(/^https?:\/\//i, "")
+    .replace(/^www\./i, "")
+    .replace(/\/$/, "")
+    .toLowerCase();
 }
 
-function isValidHostname(domain) {
-  // Must be non-empty, no spaces, contain at least one dot
-  return domain.length > 0 && !/\s/.test(domain) && domain.includes(".");
+function isValidPattern(pattern) {
+  if (!pattern || /\s/.test(pattern)) return false;
+  // Strip leading *. for domain-part check
+  const base = pattern.startsWith("*.") ? pattern.slice(2) : pattern;
+  const domainPart = base.split("/")[0];
+  // TLD wildcard: "domain.*"
+  if (domainPart.endsWith(".*")) return domainPart.split(".").length >= 2;
+  return domainPart.includes(".");
 }
 
 document.getElementById("add-btn").addEventListener("click", async () => {
   const input = document.getElementById("add-input");
   const domain = normalizeDomain(input.value);
 
-  if (!isValidHostname(domain)) {
+  if (!isValidPattern(domain)) {
     showAddMsg(tr("popup.invalidDomain"), true);
     return;
   }
@@ -447,7 +456,7 @@ document.getElementById("add-allow-btn").addEventListener("click", async () => {
   const input = document.getElementById("add-allow-input");
   const domain = normalizeDomain(input.value);
 
-  if (!isValidHostname(domain)) {
+  if (!isValidPattern(domain)) {
     showAddAllowMsg(tr("popup.invalidDomain"), true);
     return;
   }

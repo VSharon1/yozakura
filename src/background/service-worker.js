@@ -190,6 +190,37 @@ export async function isBlockingActive(settings) {
   }
 }
 
+// ─── Pattern → DNR condition ─────────────────────────────────────────────────
+
+/**
+ * Converts a blocked pattern string into a declarativeNetRequest condition.
+ * Supports three pattern types beyond plain domains:
+ *   - "reddit.com/r/gaming"  → path-specific block
+ *   - "*.reddit.com"         → subdomain wildcard
+ *   - "reddit.*"             → TLD wildcard (regexFilter)
+ * @param {string} pattern
+ * @returns {object} DNR condition object
+ */
+function patternToRuleCondition(pattern) {
+  // TLD wildcard: "reddit.*"
+  if (/^[a-z0-9-]+\.\*$/.test(pattern)) {
+    const base = pattern.slice(0, -2).replace(/\./g, "\\.");
+    return {
+      regexFilter: `^https?://(www\\.)?${base}\\.[a-z]{2,}(/.*)?$`,
+      isUrlFilterCaseSensitive: false,
+      resourceTypes: ["main_frame"]
+    };
+  }
+  // Subdomain wildcard: "*.reddit.com" → strip "*." and match domain + subdomains
+  const p = pattern.startsWith("*.") ? pattern.slice(2) : pattern;
+  // Path-bearing pattern: no ^ anchor at end so path can follow
+  if (p.includes("/")) {
+    return { urlFilter: `||${p}`, resourceTypes: ["main_frame"] };
+  }
+  // Plain domain
+  return { urlFilter: `||${p}^`, resourceTypes: ["main_frame"] };
+}
+
 // ─── DNR rule management ─────────────────────────────────────────────────────
 
 /**
@@ -271,10 +302,7 @@ export async function updateDNRRules() {
           type: "redirect",
           redirect: { url: redirectUrl }
         },
-        condition: {
-          urlFilter: `||${domain}^`,
-          resourceTypes: ["main_frame"]
-        }
+        condition: patternToRuleCondition(domain)
       });
     }
   }
