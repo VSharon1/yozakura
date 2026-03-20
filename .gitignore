@@ -1,0 +1,12 @@
+# Claude Code AI assistant config — local only
+CLAUDE.md
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
